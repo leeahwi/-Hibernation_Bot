@@ -1,7 +1,7 @@
 import discord
 import asyncio
-import youtube_dl
-import requests
+##import youtube_dl
+##import requests
 import os
 
 from features import *
