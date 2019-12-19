@@ -1,3 +1,6 @@
 asyncio
 discord
 discord.py
+youtube_dl
+requests
+os
