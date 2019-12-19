@@ -1,1 +1,1 @@
-worker: python kusun's music bot.py
+worker: python main.py
