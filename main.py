@@ -11,4 +11,4 @@ async def on_ready():
     print('Username: ' + str(client.user.name))
     print('Client ID: ' + str(client.user.id))
 
-client(TOKEN)
+client.run(TOKEN)
