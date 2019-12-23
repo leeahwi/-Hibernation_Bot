@@ -1,17 +1,32 @@
 import discord
+import asyncio
 import os
+from discord import opus
+
 
 from discord.ext import commands
-#from settings import *
+from settings import *
 
 TOKEN = os.environ['BOT_TOKEN']
-#TOKEN = 'repl token'
+#TOKEN = 'my bot's token'
 
 client = discord.Client()
 
+'''
+bot = commands.Bot(command_prefix= '$')
+
+@bot.event
+async def on_ready():
+    print('Logged in as bot event')
+    print('Username: ' + str(bot.user.name))
+    print('Client ID: ' + str(bot.user.id))
+  #check it work
+
 #bot = commands.Bot(command_prefix = '$')
+'''
 
 COMMANDPREFIX = '!'
+
 
 @client.event
 async def on_ready():
@@ -44,7 +59,7 @@ async def on_message(message):
       await ctx.send(message.author.id)
       await ctx.send(client.user)
 
-  #메세지 삭제, 사용자와 봇 메세지 까지 삭제 확인
+  #메세지 삭제, 다른사람꺼 삭제는 어케하누...
   if message.content.startswith(COMMANDPREFIX+'delete'):
      # msgd = before.message
       await message.delete(delay=1)
@@ -58,21 +73,62 @@ async def on_message(message):
       await client.change_presence(activity=discord.Game(name=msg))
       await ctx.send("done")
     #check it work
+  
+  if message.content.startswith(COMMANDPREFIX+'hello'):
 
+    await ctx.send('hello!')
+
+    def check_predicate(message):
+        return message.content == 'hello' and message.channel == ctx
+
+    msg = await client.wait_for('message', check = check_predicate, timeout = 100)
+
+    await ctx.send('Hello {.author}!'.format(msg))
+    await ctx.send(f'{msg} has connected to Discord!')
   #check it work
 
+  if message.content.startswith(COMMANDPREFIX+'embed'):
+
+    emb = discord.Embed(title="test",description="test용 embed 입니다",colour = 0x2ecc71 )
+
+    emb.set_thumbnail(url="https://cdn.discordapp.com/avatars/260754328187305984/b144bfacf229dce0f3b912185ddd364d.png?size=128")
+
+    emb.add_field(name="test1", value="바보들")
+
+    emb.set_author(name='숄쯋유라',url="https://cdn.discordapp.com/avatars/260754328187305984/b144bfacf229dce0f3b912185ddd364d.png?size=128", icon_url="https://cdn.discordapp.com/avatars/260754328187305984/b144bfacf229dce0f3b912185ddd364d.png?size=128")
+
+    emb.set_footer(icon_url=message.author.avatar_url,text='Requested by {}'.format(message.author.display_name))
+
+    emb.set_image(url=message.author.avatar_url)
+
+    #emoji =  client.get_emoji(658164817458102302)
+    #이건 작동 안했음
+
+    emoji = '\N{THUMBS UP SIGN}'
+    #checked
+
+    emb.add_field(name="tess",value=emoji)
 
 
+    #You use the Message.add_reaction() method.
+    #If you want to use unicode emoji, you must pass a valid unicode code point in a string. In your code, you can write this in a few different ways:
 
-'''
-@bot.command
-async def test():
-   await message.channel.send("test")
+    #'👍'
 
-@bot.event
-async def on_message(message):
-    await message.channel.send("hello!")
-'''
+    #'\U0001F44D'
 
+    #'\N{THUMBS UP SIGN}'
 
+    emb.insert_field_at(index=1,name="tes2",value=emoji,inline=True)
+
+    emb.insert_field_at(index=1,name="tes3",value=emoji,inline=False)
+
+    emb.set_field_at(index=1,name="tes4", value=emoji, inline=False)
+    
+    #imageURL = "https://cdn.discordapp.com/avatars/260754328187305984/b144bfacf229dce0f3b912185ddd364d.png?size=128"
+    #embed.description("checked")
+    #embed.set_image(imageURL)
+
+    await ctx.send(embed=emb)
+  
 client.run(TOKEN)
