@@ -1,11 +1,8 @@
 import discord
 import asyncio
 import os
-from discord import opus
-
 
 from discord.ext import commands
-from settings import *
 
 TOKEN = os.environ['BOT_TOKEN']
 
