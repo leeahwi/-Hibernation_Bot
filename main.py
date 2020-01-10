@@ -11,7 +11,7 @@ TOKEN = os.environ['BOT_TOKEN']
 
 client = discord.Client()
 
-COMMANDPREFIX = '!'
+COMMANDPREFIX = '$'
 
 
 @client.event
