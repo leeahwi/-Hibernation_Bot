@@ -8,22 +8,8 @@ from discord.ext import commands
 from settings import *
 
 TOKEN = os.environ['BOT_TOKEN']
-#TOKEN = 'my bot's token'
 
 client = discord.Client()
-
-'''
-bot = commands.Bot(command_prefix= '$')
-
-@bot.event
-async def on_ready():
-    print('Logged in as bot event')
-    print('Username: ' + str(bot.user.name))
-    print('Client ID: ' + str(bot.user.id))
-  #check it work
-
-#bot = commands.Bot(command_prefix = '$')
-'''
 
 COMMANDPREFIX = '!'
 
@@ -59,12 +45,25 @@ async def on_message(message):
       await ctx.send(message.author.id)
       await ctx.send(client.user)
 
-  #메세지 삭제, 다른사람꺼 삭제는 어케하누...
+ #메세지 단일 또는 다중 삭제, 다른사람꺼 삭제는 어케하누...
+  #지금은 따로 조건 안걸었지만 나중가서는 조건 달아서 유저에 따라 메세지 삭제되게끔 할 예정
   if message.content.startswith(COMMANDPREFIX+'delete'):
-     # msgd = before.message
-      await message.delete(delay=1)
+
+      if message.content[8:] == '':
+        number = 2
+      #$delete 만 했을경우
+      else:
+        number = int(message.content[8:])
+      #몇개의 메세지 삭제할건지의 변수
+
+      
+      msg = await ctx.history(limit=number+1).flatten()
+      #ctx.history().flatten list 화
+      
+      await ctx.delete_messages(msg)
+      #정상적으로 입력했을경우
+
       message = await ctx.send("delete checking")
-      await message.delete(delay=1)
   #check it work
  
   #봇 상태 바꾸기(추후에 온오프라인, 다른 용무중도 바꿀예정)
