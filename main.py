@@ -42,25 +42,42 @@ async def on_message(message):
       await ctx.send(message.author.id)
       await ctx.send(client.user)
 
- #메세지 단일 또는 다중 삭제, 다른사람꺼 삭제는 어케하누...
-  #지금은 따로 조건 안걸었지만 나중가서는 조건 달아서 유저에 따라 메세지 삭제되게끔 할 예정
+
+  #메세지 단일 또는 다중 삭제, 다른사람꺼 삭제는 어케하누... -> 다른사람꺼는 삭제 안되게 함
+  #이제 메세지 친 유저의 메세지만 삭제됨
+  #봇 메세지는 시간후에 삭제되도록 함
+  #추가로 특정 조건을 가진 사람들은 다른사람 메세지도 삭제 가능하게 할 기능 추가 예정
   if message.content.startswith(COMMANDPREFIX+'delete'):
+      
+      user = message.author
+
+      print(message.author)
 
       if message.content[8:] == '':
         number = 2
       #$delete 만 했을경우
       else:
-        number = int(message.content[8:])
+        number = int(message.content[8:]) + 1 
       #몇개의 메세지 삭제할건지의 변수
-
       
-      msg = await ctx.history(limit=number+1).flatten()
-      #ctx.history().flatten list 화
-      
-      await ctx.delete_messages(msg)
-      #정상적으로 입력했을경우
+      message = await ctx.send(embed=discord.Embed(title="3초뒤 메세지 삭제됩니다.",type="rich",colour=0x7289da))
+      await message.delete(delay=5)
+      #메세지 삭제 안내 구문
 
-      message = await ctx.send("delete checking")
+      def predicate(message):
+        return not message.author.bot
+      #봇 메세지를 msg에 넣지 않음
+
+      counter = 0
+      #삭제할 메세지 갯수
+
+      async for msg in ctx.history(limit=200).filter(predicate):
+        if msg.author == user:
+          await msg.delete(delay=3)
+          counter += 1
+        if counter == number:
+          break
+      
   #check it work
  
   #봇 상태 바꾸기(추후에 온오프라인, 다른 용무중도 바꿀예정)
