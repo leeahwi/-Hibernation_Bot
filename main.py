@@ -184,7 +184,23 @@ async def on_message(message):
                 return await ctx.send('Could not download file...')
         data = io.BytesIO(await resp.read())
         await ctx.send(file=discord.File(data, 'search_keyword.jpg'))
+  if message.content.startswith(COMMANDPREFIX+'하영'):
+    await ctx.send(embed=discord.Embed(title="바보하영",colour=0x7289da))
 
+  if message.content.startswith(COMMANDPREFIX+'꼬리'):
+    await ctx.send(embed=discord.Embed(title="바보졸개",colour=0x7289da))
+
+  if message.content.startswith(COMMANDPREFIX+'현구'):
+    await ctx.send(embed=discord.Embed(title="헣",colour=0x7289da))
+
+  if message.content.startswith(COMMANDPREFIX+'아휘'):
+    await ctx.send(embed=discord.Embed(title="정상인",colour=0x7289da))
+
+  if message.content.startswith(COMMANDPREFIX+'대영'):
+    await ctx.send(embed=discord.Embed(title="정상인",colour=0x7289da))
+
+  if message.content.startswith(COMMANDPREFIX+'호주'):                 
+    await ctx.send(embed=discord.Embed(title="딸내미" + "\N{THUMBS UP SIGN}" ,colour=0x7289da))
         
   
 client.run(TOKEN)
