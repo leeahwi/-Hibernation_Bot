@@ -147,7 +147,7 @@ async def on_message(message):
     await ctx.send(embed=emb)
     
   #이미지 업로드 
-  #흠.. 명령어 다음에 오는 말에 따라 검색한 키워드 랜덤 이미지 불러올수있게 하자
+  #검색기능도 만들었지만 일단 위험성이 있다고 생각해 봉인
   if message.content.startswith(COMMANDPREFIX+'울지참'):
     async with aiohttp.ClientSession() as session:
       async with session.get('https://cdn.discordapp.com/attachments/646877332187119616/665544158773248021/IMG_20200111_093841.jpg') as resp:
