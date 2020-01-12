@@ -1,6 +1,8 @@
 import discord
 import asyncio
 import os
+import aiohttp
+import io
 
 from discord.ext import commands
 
@@ -143,5 +145,33 @@ async def on_message(message):
     #embed.set_image(imageURL)
 
     await ctx.send(embed=emb)
+    
+  #이미지 업로드 
+  #흠.. 명령어 다음에 오는 말에 따라 검색한 키워드 랜덤 이미지 불러올수있게 하자
+  if message.content.startswith(COMMANDPREFIX+'울지참'):
+    async with aiohttp.ClientSession() as session:
+      async with session.get('https://cdn.discordapp.com/attachments/646877332187119616/665544158773248021/IMG_20200111_093841.jpg') as resp:
+        if resp.status != 200:
+            return await ctx.send('Could not download file...')
+        data = io.BytesIO(await resp.read())
+        await ctx.send(file=discord.File(data, 'crying_hell.jpg'))    
+    
+  if message.content.startswith(COMMANDPREFIX+'냥냥'):
+    async with aiohttp.ClientSession() as session:
+      async with session.get('https://source.unsplash.com/1600x900/?cat') as resp:
+        if resp.status != 200:
+            return await ctx.send('Could not download file...')
+        data = io.BytesIO(await resp.read())
+        await ctx.send(file=discord.File(data, 'cute_cat.jpg'))
+
+  if message.content.startswith(COMMANDPREFIX+'멍멍'):
+    async with aiohttp.ClientSession() as session:
+      async with session.get('https://source.unsplash.com/1600x900/?dog') as resp:
+        if resp.status != 200:
+            return await ctx.send('Could not download file...')
+        data = io.BytesIO(await resp.read())
+        await ctx.send(file=discord.File(data, 'cute_dog.jpg'))
+
+        
   
 client.run(TOKEN)
