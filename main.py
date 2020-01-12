@@ -202,5 +202,38 @@ async def on_message(message):
   if message.content.startswith(COMMANDPREFIX+'호주'):                 
     await ctx.send(embed=discord.Embed(title="딸내미" + "\N{THUMBS UP SIGN}" ,colour=0x7289da))
         
+  ##사퍼 사다리 기능
+  if message.content.startswith(COMMANDPREFIX+'사다리'):
+    voice = message.author.voice.channel
+    '''
+    print(str(voice.id) + voice.name)
+    print(voice.members[1].name)
+    print(voice.members[1].id)
+    print(voice.members[1].bot)
+    print(voice.members[0].bot)
+    print(voice.members[0].id)
+    '''
+    mlist = voice.members[:]
+
+    counter = 0
+
+    mlist_name=[]
+
+    #print(mlist)
+    #voicechannel에 들어가 있는 사람의 이름만 mlist_name 리스트에 복사
+    for i in mlist:
+
+      if mlist[counter].name == None:
+        break
+  
+      mlist_name.append(mlist[counter].name)
+
+      counter +=1
+
+    await ctx.send(mlist_name)
+      
+
+    #memlist[] =
+    #voicechannel 중 선택할 채널 골라야함
   
 client.run(TOKEN)
