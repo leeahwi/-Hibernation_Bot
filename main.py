@@ -194,10 +194,10 @@ async def on_message(message):
     await ctx.send(embed=discord.Embed(title="헣",colour=0x7289da))
 
   if message.content.startswith(COMMANDPREFIX+'아휘'):
-    await ctx.send(embed=discord.Embed(title="정상인",colour=0x7289da))
+    await ctx.send(embed=discord.Embed(title="군머",colour=0x7289da))
 
   if message.content.startswith(COMMANDPREFIX+'대영'):
-    await ctx.send(embed=discord.Embed(title="정상인",colour=0x7289da))
+    await ctx.send(embed=discord.Embed(title="야근맨",colour=0x7289da))
 
   if message.content.startswith(COMMANDPREFIX+'호주'):                 
     await ctx.send(embed=discord.Embed(title="딸내미" + "\N{THUMBS UP SIGN}" ,colour=0x7289da))
