@@ -201,6 +201,20 @@ async def on_message(message):
 
   if message.content.startswith(COMMANDPREFIX+'호주'):                 
     await ctx.send(embed=discord.Embed(title="딸내미" + "\N{THUMBS UP SIGN}" ,colour=0x7289da))
+
+
+  if message.content.startswith(COMMANDPREFIX+'시열'):
+    await ctx.send(embed=discord.Embed(title="숄",colour=0x7289da))
+
+
+  if message.content.startswith(COMMANDPREFIX+'감자'):
+    await ctx.send(embed=discord.Embed(title="감자'바보'",colour=0x7289da))
+
+
+  if message.content.startswith(COMMANDPREFIX+'새우'):
+    await ctx.send(embed=discord.Embed(title="^€^",colour=0x7289da))
+ 
+  
         
   ##사퍼 사다리 기능
   if message.content.startswith(COMMANDPREFIX+'사다리'):
