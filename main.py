@@ -173,18 +173,20 @@ async def on_message(message):
         await ctx.send(file=discord.File(data, 'cute_dog.jpg'))
         
   if message.content.startswith(COMMANDPREFIX+'검색'):
-    if message.author.id == 260754328187305984:
-      keyword = message.content[4:]
+    #if message.author.id == 260754328187305984:
+    keyword = message.content[4:]
       #checking
-      print(keyword)
+    print(keyword)
 
-      async with aiohttp.ClientSession() as session:
-        async with session.get('https://source.unsplash.com/1600x900/?'+keyword) as resp:
-            if resp.status != 200:
-                return await ctx.send('Could not download file...')
+    async with aiohttp.ClientSession() as session:
+      async with session.get('https://source.unsplash.com/1600x900/?'+keyword) as resp:
+        if resp.status != 200:
+            return await ctx.send('Could not download file...')
         data = io.BytesIO(await resp.read())
         await ctx.send(file=discord.File(data, 'search_keyword.jpg'))
-        
+      
+      
+  
   if message.content.startswith(COMMANDPREFIX+'하영'):
     if message.content[3:] == '':
       #msg = message.content[3:]
@@ -215,6 +217,7 @@ async def on_message(message):
     if message.content[3:] == '':
       await ctx.send(embed=discord.Embed(title="딸내미" + "\N{THUMBS UP SIGN}" ,colour=0x7289da))
 
+
   if message.content.startswith(COMMANDPREFIX+'시열'):
     if message.content[3:] == '':
       await ctx.send(embed=discord.Embed(title="숄",colour=0x7289da))
@@ -228,6 +231,7 @@ async def on_message(message):
   if message.content.startswith(COMMANDPREFIX+'새우'):
     if message.content[3:] == '':
       await ctx.send(embed=discord.Embed(title="^€^",colour=0x7289da))
+ 
   
         
   ##사퍼 사다리 기능
@@ -241,12 +245,17 @@ async def on_message(message):
     print(voice.members[0].bot)
     print(voice.members[0].id)
     '''
+    numlist = random.sample(range(0, 9), 9)
+
     mlist = voice.members[:]
 
     counter = 0
 
     mlist_name=[]
+    mlist_team1=[]
+    mlist_team2=[]
 
+    
     #print(mlist)
     #voicechannel에 들어가 있는 사람의 이름만 mlist_name 리스트에 복사
     for i in mlist:
@@ -258,10 +267,17 @@ async def on_message(message):
 
       counter +=1
 
-    await ctx.send(mlist_name)
-      
+    if counter >= 10:
+      await ctx.send("사람이 10명 초과입니다.")
+    else:
+      await ctx.send(mlist_name)
+
+    '''
+    for i in numlist:
+      mlist_team1.append(mlist_name[numlist])
+      print(mlist_team1)
+    '''
 
     #memlist[] =
     #voicechannel 중 선택할 채널 골라야함
-  
 client.run(TOKEN)
