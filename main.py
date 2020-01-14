@@ -220,7 +220,7 @@ async def on_message(message):
 
   if message.content.startswith(COMMANDPREFIX+'시열'):
     if message.content[3:] == '':
-      await ctx.send(embed=discord.Embed(title="숄",colour=0x7289da))
+      await ctx.send(embed=discord.Embed(title="샆창",colour=0x7289da))
 
 
   if message.content.startswith(COMMANDPREFIX+'감자'):
@@ -230,7 +230,7 @@ async def on_message(message):
 
   if message.content.startswith(COMMANDPREFIX+'새우'):
     if message.content[3:] == '':
-      await ctx.send(embed=discord.Embed(title="^€^",colour=0x7289da))
+      await ctx.send(embed=discord.Embed(title="막냉이",colour=0x7289da))
  
   
         
