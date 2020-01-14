@@ -173,7 +173,7 @@ async def on_message(message):
         await ctx.send(file=discord.File(data, 'cute_dog.jpg'))
         
   if message.content.startswith(COMMANDPREFIX+'검색'):
-    if message.user.id == 260754328187305984:
+    if message.author.id == 260754328187305984:
       keyword = message.content[4:]
       #checking
       print(keyword)
@@ -184,36 +184,50 @@ async def on_message(message):
                 return await ctx.send('Could not download file...')
         data = io.BytesIO(await resp.read())
         await ctx.send(file=discord.File(data, 'search_keyword.jpg'))
+        
   if message.content.startswith(COMMANDPREFIX+'하영'):
-    await ctx.send(embed=discord.Embed(title="바보하영",colour=0x7289da))
+    if message.content[3:] == '':
+      #msg = message.content[3:]
+      #print(msg)
+      await ctx.send(embed=discord.Embed(title="바보하영",colour=0x7289da))
 
   if message.content.startswith(COMMANDPREFIX+'꼬리'):
-    await ctx.send(embed=discord.Embed(title="바보졸개",colour=0x7289da))
-
+    if message.content[3:] == '':
+      await ctx.send(embed=discord.Embed(title="바보졸개",colour=0x7289da))
+    
+  if message.content.startswith(COMMANDPREFIX+'졸개'):
+    if message.content[3:] == '':
+      await ctx.send(embed=discord.Embed(title="바보꼬리",colour=0x7289da))
+    
   if message.content.startswith(COMMANDPREFIX+'현구'):
-    await ctx.send(embed=discord.Embed(title="헣",colour=0x7289da))
+    if message.content[3:] == '':
+      await ctx.send(embed=discord.Embed(title="헣",colour=0x7289da))
 
   if message.content.startswith(COMMANDPREFIX+'아휘'):
-    await ctx.send(embed=discord.Embed(title="군머",colour=0x7289da))
+    if message.content[3:] == '':
+      await ctx.send(embed=discord.Embed(title="정상인",colour=0x7289da))
 
   if message.content.startswith(COMMANDPREFIX+'대영'):
-    await ctx.send(embed=discord.Embed(title="야근맨",colour=0x7289da))
+    if message.content[3:] == '':
+      await ctx.send(embed=discord.Embed(title="야근맨...ㅋ",colour=0x7289da))
 
   if message.content.startswith(COMMANDPREFIX+'호주'):                 
-    await ctx.send(embed=discord.Embed(title="딸내미" + "\N{THUMBS UP SIGN}" ,colour=0x7289da))
-
+    if message.content[3:] == '':
+      await ctx.send(embed=discord.Embed(title="딸내미" + "\N{THUMBS UP SIGN}" ,colour=0x7289da))
 
   if message.content.startswith(COMMANDPREFIX+'시열'):
-    await ctx.send(embed=discord.Embed(title="숄",colour=0x7289da))
+    if message.content[3:] == '':
+      await ctx.send(embed=discord.Embed(title="숄",colour=0x7289da))
 
 
   if message.content.startswith(COMMANDPREFIX+'감자'):
-    await ctx.send(embed=discord.Embed(title="감자'바보'",colour=0x7289da))
+    if message.content[3:] == '':
+      await ctx.send(embed=discord.Embed(title="감자'바보'",colour=0x7289da))
 
 
   if message.content.startswith(COMMANDPREFIX+'새우'):
-    await ctx.send(embed=discord.Embed(title="^€^",colour=0x7289da))
- 
+    if message.content[3:] == '':
+      await ctx.send(embed=discord.Embed(title="^€^",colour=0x7289da))
   
         
   ##사퍼 사다리 기능
@@ -240,7 +254,7 @@ async def on_message(message):
       if mlist[counter].name == None:
         break
   
-      mlist_name.append(mlist[counter].name)
+      mlist_name.append(mlist[counter].display_name)
 
       counter +=1
 
