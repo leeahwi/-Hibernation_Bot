@@ -245,7 +245,7 @@ async def on_message(message):
     print(voice.members[0].bot)
     print(voice.members[0].id)
     '''
-    numlist = random.sample(range(0, 9), 9)
+    #numlist = random.sample(range(0, 9), 9)
 
     mlist = voice.members[:]
 
