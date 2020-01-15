@@ -191,7 +191,7 @@ async def on_message(message):
     if message.content[3:] == '':
       #msg = message.content[3:]
       #print(msg)
-      await ctx.send(embed=discord.Embed(title="바보하영",colour=0x7289da))
+      await ctx.send(embed=discord.Embed(title="아프니까...청춘이다... by.'유하영'",colour=0xe74c3c))
 
   if message.content.startswith(COMMANDPREFIX+'꼬리'):
     if message.content[3:] == '':
