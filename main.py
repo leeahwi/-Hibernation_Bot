@@ -244,7 +244,7 @@ async def on_message(message):
   
         
   
-  ##사퍼 팀배정 기능
+  ##사퍼 사다리 기능
   if message.content.startswith(COMMANDPREFIX+'팀배정'):
     if message.content[4:] == '':
       voice = message.author.voice.channel
@@ -285,7 +285,11 @@ async def on_message(message):
         counter +=1
 
       #print(mlist_name)
+      
       random.shuffle(mlist_name)
+      while abs(mlist_name[0:5].count("None")-mlist_name[5:10].count("None")) >= 2:
+        random.shuffle(mlist_name)
+
       #랜덤으로 팀 배정
       #print(mlist_name)
 
