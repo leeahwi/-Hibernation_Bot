@@ -1,5 +1,10 @@
 asyncio
 discord
 discord.py
-youtube_dl
+datetime
 requests
+pytz
+ramdom
+numpy
+pandas
+json
