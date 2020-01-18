@@ -367,9 +367,14 @@ async def on_message(message):
 
       dict2 = requests.get(url).json()
 
-      w_count = dict2['records'][1]['winCount']
-      l_count = dict2['records'][1]['loseCount']
-      s_count = dict2['records'][1]['stopCount']
+      if dict2['records'][0]['gameTypeId'] == "normal":
+        w_count = dict2['records'][0]['winCount']
+        l_count = dict2['records'][0]['loseCount']
+        s_count = dict2['records'][0]['stopCount']
+      else:
+        w_count = dict2['records'][1]['winCount']
+        l_count = dict2['records'][1]['loseCount']
+        s_count = dict2['records'][1]['stopCount']
 
 
       emb = discord.Embed(title= "사이퍼즈 " + username + " 기본정보", colour=0x9b59b6)
