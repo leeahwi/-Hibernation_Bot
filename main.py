@@ -375,8 +375,9 @@ async def on_message(message):
       emb.add_field(name="이름: ",value = username, inline=True)
       emb.add_field(name="급수: ",value = grade, inline=False)
       emb.add_field(name="일반 승: ",value = w_count , inline=True)
-      emb.add_field(name="일반 패: ",value = w_count , inline=True)
+      emb.add_field(name="일반 패: ",value = l_count , inline=True)
       emb.add_field(name="일반 탈주: ",value = s_count , inline=True)
+
 
       await ctx.send(embed=emb)
 
