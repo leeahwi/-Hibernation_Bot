@@ -306,4 +306,78 @@ async def on_message(message):
       msg = await ctx.send("'팀배정'이라 쳐야 작동되요! (｡ŏ﹏ŏ)｡ ")
       await msg.delete(delay=3)
       #봇 메세지 삭제
+    
+    
+## 사이퍼즈 전적 검색
+  if message.content.startswith(COMMANDPREFIX+'전적'):
+    #if message.content[3:] == " ":
+
+      username = message.content[4:]
+      
+      #print(username)
+      
+      try:
+        url = "https://api.neople.co.kr/cy/players?nickname=" + username + "&wordType=match&apikey=" + cyp_TOKEN
+        
+        dict = requests.get(url).json()
+        #뒤에 () 괄호 없어서 오류 뜸 ㅋ 왜그런지는 잘 모르겠네
+        playerid = dict['rows'][0]['playerId']
+        user = dict['rows'][0]['nickname']
+        grade = dict['rows'][0]['grade']
+
+
+      except IndexError:
+        await message.delete(delay=0)
+        msg = await ctx.send(embed=discord.Embed(title="닉네임이 존재하지 않습니다."))
+        await msg.delete(delay=3)
+
+      except requests.exceptions.RequestException:
+        await message.delete(delay=0)
+        await ctx.send(embed=discord.Embed(title="서버가 응답하지 않습니다."))
+        await msg.delete(delay=3)
+
+      '''
+      user = nickname
+      grade = 급수
+      clanName = 클랜이름
+      ratingpoint = 공식전 점수?
+      maxRatingPoing = 최대 점수
+      tierName = 공식 티어
+      records 
+      [
+        gameTypeId = rating <- rating 으로 값일경우 공식전 데이터 라는 뜻
+        winCount = 이긴횟수
+        loseCount" : 진횟수,
+        stopCount" : 나간횟수
+      ]
+       "gameTypeId" : "normal",
+        "winCount" : 2097,
+        "loseCount" : 1768,
+        "stopCount" : 67
+      '''
+
+      print(user)
+      print(playerid)
+
+      #await ctx.send(user)
+      #await ctx.send(playerid)
+      
+      url = "https://api.neople.co.kr/cy/players/" + playerid + "?apikey=" + cyp_TOKEN
+
+      dict2 = requests.get(url).json()
+
+      w_count = dict2['records'][1]['winCount']
+      l_count = dict2['records'][1]['loseCount']
+      s_count = dict2['records'][1]['stopCount']
+
+
+      emb = discord.Embed(title= "사이퍼즈 " + username + " 기본정보", colour=0x9b59b6)
+      emb.add_field(name="이름: ",value = username, inline=True)
+      emb.add_field(name="급수: ",value = grade, inline=False)
+      emb.add_field(name="일반 승: ",value = w_count , inline=True)
+      emb.add_field(name="일반 패: ",value = w_count , inline=True)
+      emb.add_field(name="일반 탈주: ",value = s_count , inline=True)
+
+      await ctx.send(embed=emb)
+
 client.run(TOKEN)
