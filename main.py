@@ -3,7 +3,16 @@ import asyncio
 import os
 import aiohttp
 import io
+import random
 
+import requests
+import numpy as np
+import pandas as pd
+import json
+import datetime as dt
+
+from pytz import timezone
+from discord import opus
 from discord.ext import commands
 
 TOKEN = os.environ['BOT_TOKEN']
@@ -234,50 +243,63 @@ async def on_message(message):
  
   
         
-  ##사퍼 사다리 기능
-  if message.content.startswith(COMMANDPREFIX+'사다리'):
-    voice = message.author.voice.channel
-    '''
-    print(str(voice.id) + voice.name)
-    print(voice.members[1].name)
-    print(voice.members[1].id)
-    print(voice.members[1].bot)
-    print(voice.members[0].bot)
-    print(voice.members[0].id)
-    '''
-    #numlist = random.sample(range(0, 9), 9)
-
-    mlist = voice.members[:]
-
-    counter = 0
-
-    mlist_name=[]
-    mlist_team1=[]
-    mlist_team2=[]
-
-    
-    #print(mlist)
-    #voicechannel에 들어가 있는 사람의 이름만 mlist_name 리스트에 복사
-    for i in mlist:
-
-      if mlist[counter].name == None:
-        break
   
-      mlist_name.append(mlist[counter].display_name)
+  ##사퍼 팀배정 기능
+  if message.content.startswith(COMMANDPREFIX+'팀배정'):
+    if message.content[4:] == '':
+      voice = message.author.voice.channel
+      '''
+      print(str(voice.id) + voice.name)
+      print(voice.members[1].name)
+      print(voice.members[1].id)
+      print(voice.members[1].bot)
+      print(voice.members[0].bot)
+      print(voice.members[0].id)
+      '''
 
-      counter +=1
+      mlist = voice.members[:]
+      
 
-    if counter >= 10:
-      await ctx.send("사람이 10명 초과입니다.")
+      counter = 0
+      #10명 채우기 위한 변수
+
+      mlist_name=[]
+      
+      for i in range(0,10):
+        mlist_name.append("None")
+      
+      #print(mlist)
+      #voicechannel에 들어가 있는 사람의 이름만 mlist_name 리스트에 복사
+      for i in mlist:
+        
+        print(mlist[counter].bot)
+      
+
+        if counter == 10:
+          break
+        
+        if mlist[counter].bot == False:
+            mlist_name.remove("None")
+            mlist_name.append(mlist[counter].display_name)
+    
+        counter +=1
+
+      #print(mlist_name)
+      random.shuffle(mlist_name)
+      #랜덤으로 팀 배정
+      #print(mlist_name)
+
+      #print(mlist_name[0:5])
+      #print(mlist_name[5:10])
+
+      await ctx.send(embed=discord.Embed(title= "1팀: " + ', '.join((str(i) for i in mlist_name[0:5])),colour=0xe74c3c))
+
+      await ctx.send(embed=discord.Embed(title= "2팀: " + ', '.join((str(i) for i in mlist_name[5:10])),colour=0x3498db))
+
     else:
-      await ctx.send(mlist_name)
-
-    '''
-    for i in numlist:
-      mlist_team1.append(mlist_name[numlist])
-      print(mlist_team1)
-    '''
-
-    #memlist[] =
-    #voicechannel 중 선택할 채널 골라야함
+      await message.delete(delay=None)
+      #이용자 메세지 삭제
+      msg = await ctx.send("'팀배정'이라 쳐야 작동되요! (｡ŏ﹏ŏ)｡ ")
+      await msg.delete(delay=3)
+      #봇 메세지 삭제
 client.run(TOKEN)
