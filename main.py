@@ -16,6 +16,7 @@ from discord import opus
 from discord.ext import commands
 
 TOKEN = os.environ['BOT_TOKEN']
+cyp_TOKEN = os.environ['CYP_TOKEN']
 
 client = discord.Client()
 
