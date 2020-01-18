@@ -287,8 +287,8 @@ async def on_message(message):
       #print(mlist_name)
       
       random.shuffle(mlist_name)
-      while abs(mlist_name[0:5].count("None")-mlist_name[5:10].count("None")) >= 2:
-        random.shuffle(mlist_name)
+      #while abs(mlist_name[0:5].count("None")-mlist_name[5:10].count("None")) >= 2:
+        #random.shuffle(mlist_name)
 
       #랜덤으로 팀 배정
       #print(mlist_name)
