@@ -4,7 +4,6 @@ discord.py
 datetime
 requests
 pytz
-ramdom
 numpy
 pandas
 json
