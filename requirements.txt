@@ -6,4 +6,3 @@ requests
 pytz
 numpy
 pandas
-json
