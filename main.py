@@ -526,6 +526,7 @@ async def on_message(message):
             time = dict3['matches']['rows'][i]['date'][11:13]
             #hour 시간 값만 가져옴
             time_count.append(time)
+
         except IndexError:
           pass
     
@@ -558,7 +559,18 @@ async def on_message(message):
         #첫번째 줄
         embed.add_field(name="모스트 캐릭: ",value = str(most[0]))
         embed.add_field(name="주로 맺는 파티규모: ",value = str(most[1][0][0]) + "명")
-        embed.add_field(name="자주하는 시간대: ",value = str(most[2][0][1])+ "~" + str(most[2][0][0]) + "시")
+        embed.add_field(name="자주하는 시간대: ",value = str(most[2][0][0])+ ", " + str(most[2][0][1]) + "시")
+      
+      #90일간 전적중 100게임 가장 많이 한 캐릭터
+      most = []
+      most = get_player_match()
+      #most[0] = 모스트 캐릭
+      #most[1] = 모스트 파티원
+      #most[2] = 모스트 시간대
+
+      #모스트 목록 세팅
+      set_mostfield(most)
+
 
       '''
       msg1 = await ctx.send(embed=discord.Embed(title= None,
@@ -576,19 +588,7 @@ async def on_message(message):
       else:
         await msg1.delete(delay=0)
       '''
-      
-      #90일간 전적중 100게임 가장 많이 한 캐릭터
-      most = []
-      most = get_player_match()
-      #most[0] = 모스트 캐릭
-      #most[1] = 모스트 파티원
-      #most[2] = 모스트 시간대
-
-      #모스트 목록 세팅
-      set_mostfield(most)
-      
 
       await ctx.send(embed=embed)
-
 
 client.run(TOKEN)
