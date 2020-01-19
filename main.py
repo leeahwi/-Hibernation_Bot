@@ -313,8 +313,9 @@ async def on_message(message):
 ## 사이퍼즈 전적 검색
   if message.content.startswith(COMMANDPREFIX+'전적'):
     #if message.content[3:] == " ":
-
+      #처음 명령어 친 유저
       info_user = message.author
+      
       username = message.content[4:]
       
       #print(username)
@@ -433,8 +434,6 @@ async def on_message(message):
           l_count = dict2['records'][1]['loseCount']
           s_count = dict2['records'][1]['stopCount']
           set_infofield()
-        
-        await ctx.send(embed=embed)
 
       #예외처리 및 예외시 에러코드
       except Exception as ex:
@@ -489,9 +488,6 @@ async def on_message(message):
         #각 요소 리스트
 
         #캐릭 리스트
-
-        #print(dict3)
-
         cha_list = []
 
         try:
@@ -507,12 +503,64 @@ async def on_message(message):
           description = "전적이 존재하지 않습니다."))
 
         cha_list = Counter(cha_list)
-        most = cha_list.most_common(1)[0][0]
-        return most
-      
+        most_cha = cha_list.most_common(1)[0][0]
 
+        #파티원 리스트
+        party_count = []
+        
+        try:
+          for i in range(0, 100):
+            count = dict3['matches']['rows'][i]['playInfo']['partyUserCount']
+            party_count.append(count)
 
+        except IndexError:
+          pass
 
+        most_party = Counter(party_count).most_common(1)
+
+        #시간대 리스트
+        time_count = []
+        
+        try:
+          for i in range(0, 100):
+            time = dict3['matches']['rows'][i]['date'][11:13]
+            #hour 시간 값만 가져옴
+            time_count.append(time)
+        except IndexError:
+          pass
+    
+        most_time = Counter(time_count).most_common(1)
+
+        #매치id 리스트 50판 기준으로 두개로 나눔
+        matchid_list = []
+
+        try:
+          for i in range(0, 50):
+            count = dict3['matches']['rows'][i]['matchId']
+            matchid_list.append(count)
+
+        except IndexError:
+          pass
+
+        matchid_list2 = []
+
+        try:
+          for i in range(50, 100):
+            count = dict3['matches']['rows'][i]['matchId']
+            matchid_list2.append(count)
+
+        except IndexError:
+          pass
+
+        return most_cha, most_party, most_time
+
+      def set_mostfield(most):
+        #첫번째 줄
+        embed.add_field(name="모스트 캐릭: ",value = str(most[0]))
+        embed.add_field(name="주로 맺는 파티규모: ",value = str(most[1][0][0]) + "명")
+        embed.add_field(name="자주하는 시간대: ",value = str(most[2][0][1])+ "~" + str(most[2][0][0]) + "시")
+
+      '''
       msg1 = await ctx.send(embed=discord.Embed(title= None,
       description = "매칭 기록을 보려면 '보여줘'를 입력하세요"))
 
@@ -522,13 +570,25 @@ async def on_message(message):
       try:
         msg = await client.wait_for('message', check = check_predicate, timeout = 10)
       except asyncio.TimeoutError:
-        msg2 =await ctx.send(embed=discord.Embed(title= None, 
+        await ctx.send(embed=discord.Embed(title= None, 
         description = "재입력 요구 시간이 지났습니다."))
-        await msg2.delete(delay=0)                       
+      
       else:
         await msg1.delete(delay=0)
-        #90일간 전적중 100게임 가장 많이 한 캐릭터
-        most = get_player_match()
-        await ctx.send(most)
+      '''
+      
+      #90일간 전적중 100게임 가장 많이 한 캐릭터
+      most = []
+      most = get_player_match()
+      #most[0] = 모스트 캐릭
+      #most[1] = 모스트 파티원
+      #most[2] = 모스트 시간대
+
+      #모스트 목록 세팅
+      set_mostfield(most)
+      
+
+      await ctx.send(embed=embed)
+
 
 client.run(TOKEN)
