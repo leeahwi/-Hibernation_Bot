@@ -255,7 +255,7 @@ async def on_message(message):
 
   if message.content.startswith(COMMANDPREFIX+'시열'):
     if message.content[3:] == '':
-      await ctx.send(embed=discord.Embed(title="숄",colour=0x7289da))
+      await ctx.send(embed=discord.Embed(title= None, description = "샆.창", colour=0x7289da))
 
 
   if message.content.startswith(COMMANDPREFIX+'감자'):
