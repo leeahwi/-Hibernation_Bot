@@ -202,16 +202,40 @@ async def on_message(message):
     if message.content[3:] == '':
       #msg = message.content[3:]
       #print(msg)
-      await ctx.send(embed=discord.Embed(title="아프니까...청춘이다... by.'유하영'",colour=0xe74c3c))
+      await ctx.send(embed=discord.Embed(title="바보하영",colour=0x7289da))
 
   if message.content.startswith(COMMANDPREFIX+'꼬리'):
     if message.content[3:] == '':
-      await ctx.send(embed=discord.Embed(title="바보졸개",colour=0x7289da))
-    
-  if message.content.startswith(COMMANDPREFIX+'졸개'):
-    if message.content[3:] == '':
-      await ctx.send(embed=discord.Embed(title="바보꼬리",colour=0x7289da))
-    
+      info_user = message.author
+      
+      r_num = random.randrange(1,3)
+
+      sent_list = ["길김량","바보멍청이","바보졸개","바보꼬리","멍청이"]
+      que_list = ["멍충이인가?","꼬리가 누구야?","먹는거야?"]
+      ask_list = ["헤헤... (o´〰`o) 감사해요~ ", "알려줘서 고마워!  ◝(⁰▿⁰)◜ "]
+
+
+      if r_num == 1:
+        print(random.choice(sent_list))
+        await ctx.send(embed=discord.Embed(title = None, description = random.choice(sent_list),colour=0x7289da))
+
+      elif r_num == 2:
+        print(random.choice(que_list))
+        msg = await ctx.send(embed=discord.Embed(title = None, description = random.choice(que_list),colour=0x7289da))
+
+        def check(message):
+          return message.channel == ctx and message.author == info_user
+
+        try:
+          msg = await client.wait_for('message', check = check, timeout = 10)
+          await ctx.send(embed=discord.Embed(title = None, description = random.choice(ask_list), colour=0x7289da))
+
+        except asyncio.TimeoutError:
+          pass
+      else:
+        print(3)
+
+
   if message.content.startswith(COMMANDPREFIX+'현구'):
     if message.content[3:] == '':
       await ctx.send(embed=discord.Embed(title="헣",colour=0x7289da))
@@ -231,7 +255,7 @@ async def on_message(message):
 
   if message.content.startswith(COMMANDPREFIX+'시열'):
     if message.content[3:] == '':
-      await ctx.send(embed=discord.Embed(title="샆창",colour=0x7289da))
+      await ctx.send(embed=discord.Embed(title="숄",colour=0x7289da))
 
 
   if message.content.startswith(COMMANDPREFIX+'감자'):
@@ -241,10 +265,8 @@ async def on_message(message):
 
   if message.content.startswith(COMMANDPREFIX+'새우'):
     if message.content[3:] == '':
-      await ctx.send(embed=discord.Embed(title="막냉이",colour=0x7289da))
+      await ctx.send(embed=discord.Embed(title="^€^",colour=0x7289da))
  
-  
-        
   
   ##사퍼 사다리 기능
   if message.content.startswith(COMMANDPREFIX+'팀배정'):
