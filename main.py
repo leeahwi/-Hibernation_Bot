@@ -14,6 +14,7 @@ import datetime as dt
 from pytz import timezone
 from discord import opus
 from discord.ext import commands
+from collections import Counter
 
 TOKEN = os.environ['BOT_TOKEN']
 cyp_TOKEN = os.environ['CYP_TOKEN']
@@ -438,5 +439,95 @@ async def on_message(message):
       except Exception as ex:
         embed.add_field(name="에러: ", value= ex)
         embed.add_field(name="문의: ", value= "코드와 함께 dm으로 보내주세요")
+
+      #매칭 기록 조회
+
+      #시간 설정
+      now = dt.datetime.now(timezone('Asia/Seoul'))
+      now_time = dt.datetime.strftime(now, "%Y-%m-%d %H:%M")
+      past = now - dt.timedelta(days=90)
+      past_time = dt.datetime.strftime(past, "%Y-%m-%d %H:%M")      
+
+
+      def get_player_match():
+
+        #플레이어 '매칭 기록' 조회 url
+        print(playerid)
+        #오타는 항상 조심합시다..
+        url = "https://api.neople.co.kr/cy/players/" + playerid + "/matches?gameTypeId=normal&startDate=" + str(past_time) + "&endDate=" + str(now_time) + "&limit=100&apikey=" + cyp_TOKEN
+
+
+        #matchid 정보 기록
+        '''
+          "rows" : [ 
+            {
+            "date" : "datetime.datetime",
+            "matchId" : "matchId",
+            "map" : {"mapId" : 201, "name" : "아인트호벤"},
+            "playInfo" : {
+              "result" : "win or lose",
+              "random" : true or false,
+              "partyUserCount" : 파티유저수,
+              "characterId" : "한 사이퍼 고유 ID",
+              "characterName" : "사이퍼 이름",
+              "level" : 레벨, 
+              "killCount" : 킬수,
+              "deathCount" : 데스수,
+              "assistCount" : 어시스트수,
+              "attackPoint" : 공격량,
+              "damagePoint" : 피해량,
+              "battlePoint" : 전투점수,
+              "sightPoint" : 시야점수,
+              "playTime" : (숫자)/60 해야 분단위
+            }
+        }
+        '''
+
+        dict3 = requests.get(url).json()
+
+        #각 요소 리스트
+
+        #캐릭 리스트
+
+        #print(dict3)
+
+        cha_list = []
+
+        try:
+          for i in range(0, 100):
+            cha_list.append(dict3['matches']['rows'][i]['playInfo']['characterName'])
+            #에러 이유 값이 제대로 불러오지 못했었음 'SEARCH_TIME_ERROR'
+
+        except IndexError:
+          pass
+
+        if not cha_list:
+          ctx.send(embed=discord.Embed(title= None, 
+          description = "전적이 존재하지 않습니다."))
+
+        cha_list = Counter(cha_list)
+        most = cha_list.most_common(1)[0][0]
+        return most
+      
+
+
+
+      msg1 = await ctx.send(embed=discord.Embed(title= None,
+      description = "매칭 기록을 보려면 '보여줘'를 입력하세요"))
+
+      def check_predicate(message):
+          return message.content == '보여줘' and message.channel == ctx and message.author == info_user
+
+      try:
+        msg = await client.wait_for('message', check = check_predicate, timeout = 10)
+      except asyncio.TimeoutError:
+        await ctx.send(embed=discord.Embed(title= None, 
+        description = "재입력 요구 시간이 지났습니다."))
+      
+      else:
+        await msg1.delete(delay=0)
+        #90일간 전적중 100게임 가장 많이 한 캐릭터
+        most = get_player_match()
+        await ctx.send(most)
 
 client.run(TOKEN)
