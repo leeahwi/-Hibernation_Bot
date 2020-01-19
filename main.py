@@ -357,34 +357,86 @@ async def on_message(message):
         "stopCount" : 67
       '''
 
-      print(user)
-      print(playerid)
+      #print(user)
+      #print(playerid)
 
-      #await ctx.send(user)
-      #await ctx.send(playerid)
+      #기본 embed 양식
+      embed=discord.Embed(
+        title = None,
+        colour = 0x3498db
+      )
+
+      #기본 정보 셋팅
+      def player_info():
+        embed.add_field(name= "이름: ", value = user)
+        embed.add_field(name= "급수: ", value = grade)
+        embed.add_field(name= "\n\u200b" , value = "승패 기록"  ,inline=False)
       
-      url = "https://api.neople.co.kr/cy/players/" + playerid + "?apikey=" + cyp_TOKEN
+      #'\u200b' -> 빈공간
+      #"\n\u200b"
 
-      dict2 = requests.get(url).json()
+      player_info()
+    
+      try:
+        url = "https://api.neople.co.kr/cy/players/" + playerid + "?apikey=" + cyp_TOKEN
+        #플레이어의 정보 조회 api 주소
+        dict2 = requests.get(url).json()
+        #dict 형태로 정리된 정보
+        #1. 공식과 일반 둘다 존재하는 경우
+        #2. 일반만 존재 하는 경우(공식 조건 안되는 경우가 이에 해당함)
+        #3. 둘다 존재 안하는 경우(협력만 돌렸거나, 랭크가 1인경우가 이에 해당함)
+        
+        #공식 매치 결과 기본값
+        rw_count, rl_count, rs_count = 0,0,0
+        #일반 매치 결과 기본값
+        w_count, l_count, s_count = 0,0,0
+        #w_count,l_count,s_count = 0 -> non-iterable int object error
 
-      if dict2['records'][0]['gameTypeId'] == "normal":
-        w_count = dict2['records'][0]['winCount']
-        l_count = dict2['records'][0]['loseCount']
-        s_count = dict2['records'][0]['stopCount']
-      else:
-        w_count = dict2['records'][1]['winCount']
-        l_count = dict2['records'][1]['loseCount']
-        s_count = dict2['records'][1]['stopCount']
+        #사이퍼즈 아이콘
+        embed.set_author(
+          name = "사이퍼즈 전적 검색",
+          url= "http://cyphers.nexon.com/cyphers/main",icon_url="https://cdn.discordapp.com/attachments/646154916288790541/668263428065984513/cypers_icon.jpg"
+          )
 
+        #승패 기록 필드 세팅
+        def set_infofield():
+          #첫번째 줄
+          embed.add_field(name="공식 승: ",value = rw_count)
+          embed.add_field(name="공식 패: ",value = rl_count)
+          embed.add_field(name="공식 탈주: ",value = rs_count)
+          #두번째 줄
+          embed.add_field(name="일반 승: ",value = w_count)
+          embed.add_field(name="일반 패: ",value = l_count)
+          embed.add_field(name="일반 탈주: ",value = s_count)
 
-      emb = discord.Embed(title= "사이퍼즈 " + username + " 기본정보", colour=0x9b59b6)
-      emb.add_field(name="이름: ",value = username, inline=True)
-      emb.add_field(name="급수: ",value = grade, inline=False)
-      emb.add_field(name="일반 승: ",value = w_count , inline=True)
-      emb.add_field(name="일반 패: ",value = l_count , inline=True)
-      emb.add_field(name="일반 탈주: ",value = s_count , inline=True)
+        #3번 조건 일시
+        if dict2['records'] == []:
+          embed.add_field(name="에러: ",value="일반,공식 기록이 없는 플레이어 입니다.")
 
+        #2번 조건 일시
+        elif dict2['records'][0]['gameTypeId'] == 'normal':
+          w_count = dict2['records'][0]['winCount']
+          l_count = dict2['records'][0]['loseCount']
+          s_count = dict2['records'][0]['stopCount']
+          set_infofield()
+        
+        #1번 조건 일시
+        else:
+          #공식 기록
+          rw_count = dict2['records'][0]['winCount']
+          rl_count = dict2['records'][0]['loseCount']
+          rs_count = dict2['records'][0]['stopCount']
+          #일반 기록
+          w_count = dict2['records'][1]['winCount']
+          l_count = dict2['records'][1]['loseCount']
+          s_count = dict2['records'][1]['stopCount']
+          set_infofield()
+        
+        await ctx.send(embed=embed)
 
-      await ctx.send(embed=emb)
+      #예외처리 및 예외시 에러코드
+      except Exception as ex:
+        embed.add_field(name="에러: ", value= ex)
+        embed.add_field(name="문의: ", value= "코드와 함께 dm으로 보내주세요")
 
 client.run(TOKEN)
