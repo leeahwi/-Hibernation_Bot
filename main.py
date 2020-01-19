@@ -314,6 +314,7 @@ async def on_message(message):
   if message.content.startswith(COMMANDPREFIX+'전적'):
     #if message.content[3:] == " ":
 
+      info_user = message.author
       username = message.content[4:]
       
       #print(username)
