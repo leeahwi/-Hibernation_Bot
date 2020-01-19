@@ -521,9 +521,9 @@ async def on_message(message):
       try:
         msg = await client.wait_for('message', check = check_predicate, timeout = 10)
       except asyncio.TimeoutError:
-        await ctx.send(embed=discord.Embed(title= None, 
+        msg2 =await ctx.send(embed=discord.Embed(title= None, 
         description = "재입력 요구 시간이 지났습니다."))
-      
+        await msg2.delete(delay=0)                       
       else:
         await msg1.delete(delay=0)
         #90일간 전적중 100게임 가장 많이 한 캐릭터
