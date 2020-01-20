@@ -76,7 +76,8 @@ async def delete(msg):
   #msg = message.content[8:] -> error
   #msg = msg.message.content[8:] -> done
   
-  msg = msg.content[8:]
+  msg = msg.message.content[8:]
+  print(msg)
 
   #메세지 삭제 함수
   async def del_message(num,info_user):
