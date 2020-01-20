@@ -77,6 +77,7 @@ async def delete(msg):
   #msg = msg.message.content[8:] -> done
   
   msg = int(msg.message.content[8:])
+  msg1 = msg.message.content[8:]
   
   print(msg)
 
@@ -116,7 +117,7 @@ async def delete(msg):
 
 
   # msg에 입력된 값이 없을경우
-  if msg == int(''):
+  if msg1 == '':
     s_msg = await ctx.send(embed=discord.Embed(title=None,description= "삭제할 메세지의 갯수를 입력해주세요", colour=0x7289da))
 
     await s_msg.delete(delay=3)
