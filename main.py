@@ -144,7 +144,7 @@ async def delete(msg):
   
   
   if che == True:
-    await asyncio.sleep(msg)
+    await asyncio.sleep(int(msg))
 
     s_msg = await ctx.send(embed=discord.Embed(title=None,description=
     "메세지가 삭제되었습니다.", colour=0x7289da))
