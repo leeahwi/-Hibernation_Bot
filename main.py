@@ -11,8 +11,10 @@ import pandas as pd
 import json
 import datetime as dt
 
+#내가 만들 모듈
+from prac import *
+
 from pytz import timezone
-from discord import opus
 from discord.ext import commands
 from collections import Counter
 
