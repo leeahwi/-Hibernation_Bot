@@ -265,7 +265,7 @@ async def on_message(message):
 
   if message.content.startswith(COMMANDPREFIX+'새우'):
     if message.content[3:] == '':
-      await ctx.send(embed=discord.Embed(title="^€^",colour=0x7289da))
+      await ctx.send(embed=discord.Embed(title= None, description= "막냉이 (1시열 예정)",colour=0x7289da))
  
   
   ##사퍼 사다리 기능
