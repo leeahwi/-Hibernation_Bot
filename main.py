@@ -19,12 +19,8 @@ from collections import Counter
 TOKEN = os.environ['BOT_TOKEN']
 cyp_TOKEN = os.environ['CYP_TOKEN']
 
-client = discord.Client()
 
-COMMANDPREFIX = '$'
-
-
-client = commands.Bot(command_prefix="?")
+client = commands.Bot(command_prefix="$")
 
 @client.event
 async def on_ready():
