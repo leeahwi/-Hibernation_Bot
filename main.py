@@ -76,7 +76,8 @@ async def delete(msg):
   #msg = message.content[8:] -> error
   #msg = msg.message.content[8:] -> done
   
-  msg = msg.message.content[8:]
+  msg = int(msg.message.content[8:])
+  
   print(msg)
 
   #메세지 삭제 함수
@@ -115,13 +116,13 @@ async def delete(msg):
 
 
   # msg에 입력된 값이 없을경우
-  if msg == '':
+  if msg == int(''):
     s_msg = await ctx.send(embed=discord.Embed(title=None,description= "삭제할 메세지의 갯수를 입력해주세요", colour=0x7289da))
 
     await s_msg.delete(delay=3)
 
   # msg에 숫자값이 입력됬을경우
-  elif str(type(msg)) == "<class 'int'>":
+  elif msg > 0:
   #<class 'int'> -> int 타입을 뜻하는 구절
     s_msg = await ctx.send(embed=discord.Embed(title=None,description=
     "3초뒤 "+ str(msg) + "개의 메세지 삭제됩니다.", colour=0x7289da))
