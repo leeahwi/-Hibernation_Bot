@@ -71,11 +71,12 @@ async def delete(msg):
   #기본 변수
   info_user = msg.author
   ctx = msg.channel
+  che = False
   
   #msg = message.content[8:] -> error
   #msg = msg.message.content[8:] -> done
   
-  msg = msg.message.content[8:]
+  msg = msg.content[8:]
 
   #메세지 삭제 함수
   async def del_message(num,info_user):
@@ -137,7 +138,7 @@ async def delete(msg):
 
     await s_msg.delete(delay=3)
 
-  che = False
+  
   
   if che == True:
     await asyncio.sleep(msg)
