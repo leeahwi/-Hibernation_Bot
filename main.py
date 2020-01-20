@@ -76,7 +76,7 @@ async def delete(msg):
   #msg = message.content[8:] -> error
   #msg = msg.message.content[8:] -> done
   
-  msg = int(msg.message.content[8:])
+  msg = msg.message.content[8:]
   msg1 = msg.message.content[8:]
   
   print(msg)
@@ -123,7 +123,7 @@ async def delete(msg):
     await s_msg.delete(delay=3)
 
   # msg에 숫자값이 입력됬을경우
-  elif msg > 0:
+  elif int(msg) > 0:
   #<class 'int'> -> int 타입을 뜻하는 구절
     s_msg = await ctx.send(embed=discord.Embed(title=None,description=
     "3초뒤 "+ str(msg) + "개의 메세지 삭제됩니다.", colour=0x7289da))
