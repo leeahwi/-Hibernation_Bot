@@ -132,7 +132,7 @@ async def delete(msg):
 
     await asyncio.sleep(3)
 
-    che = await del_message(msg,info_user)
+    che = await del_message(int(msg),info_user)
 
 
   #그 외의 경우
