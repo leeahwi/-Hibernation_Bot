@@ -2,10 +2,11 @@ import discord
 import asyncio
 import random
 import requests
+import pandas as pd
 from discord.ext import commands
 
-
 class userchat:
+
   def __init__(self, client):
     
     self.client = client
