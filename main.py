@@ -25,7 +25,6 @@ cyp_TOKEN = os.environ['CYP_TOKEN']
 
 client = commands.Bot(command_prefix="$")
 
-client = commands.Bot(command_prefix="?")
 
 @client.event
 async def on_ready():
@@ -34,7 +33,7 @@ async def on_ready():
     print('Client ID: ' + str(client.user.id))
 
   #봇 상태 바꾸기
-    botActivity = discord.Activity(name= "점검", type=discord.ActivityType.playing)
+    botActivity = discord.Activity(name= "겨울 보내기", type=discord.ActivityType.playing)
     await client.change_presence(activity=botActivity)
   #check it work
 
