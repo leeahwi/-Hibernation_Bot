@@ -13,7 +13,7 @@ from pytz import timezone
 from collections import Counter
  
  
- ##사퍼 사다리 기능
+##사퍼 사다리 기능
 async def divide_team(message):
 
     voice = message.author.voice.channel
