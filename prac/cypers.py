@@ -326,3 +326,5 @@ async def search_cypdata(message,cyp_TOKEN,client):
 
       #모스트 목록 세팅
       set_mostfield(most)
+
+      await ctx.send(embed=embed)
