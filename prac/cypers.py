@@ -60,7 +60,7 @@ async def divide_team(message):
 
     await ctx.send(embed=discord.Embed(title= "2팀: " + ', '.join((str(i) for i in mlist_name[5:10])),colour=0x3498db))
 
-'''
+
 ## 사이퍼즈 전적 검색 (테스트 버전)
 async def test_search_cypdata(message,cyp_TOKEN,client):
       ctx = message.channel
@@ -417,7 +417,7 @@ async def test_search_cypdata(message,cyp_TOKEN,client):
       else:
         pass
         
-'''
+
 
 ## 사이퍼즈 전적 검색
 async def search_cypdata(message,cyp_TOKEN,client):
