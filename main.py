@@ -86,10 +86,6 @@ async def 팀배정(message):
 async def 전적(message):
   await search_cypdata(message,cyp_TOKEN,client)
 
-@client.command()
-async def 테스트(message):
-  await test_search_cypdata(message,cyp_TOKEN,client)
-
 
 client.run(TOKEN)
 
