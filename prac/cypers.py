@@ -339,7 +339,7 @@ async def test_search_cypdata(message,cyp_TOKEN,client):
 
       info_user = message.author
       
-      username = message.message.content[4:]
+      username = message.message.content[7:]
       
       #print(username)
       
