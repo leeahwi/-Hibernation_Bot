@@ -1,8 +1,11 @@
 import discord
 import asyncio
 import random
+import aiohttp
+from multiprocessing import Process
 
- 
+import os 
+import time as tm
 import requests
 import numpy as np
 import pandas as pd
@@ -58,8 +61,8 @@ async def divide_team(message):
     await ctx.send(embed=discord.Embed(title= "2팀: " + ', '.join((str(i) for i in mlist_name[5:10])),colour=0x3498db))
 
 
-## 사이퍼즈 전적 검색
-async def search_cypdata(message,cyp_TOKEN):
+## 사이퍼즈 전적 검색 (테스트 버전)
+async def test_search_cypdata(message,cyp_TOKEN,client):
       ctx = message.channel
 
       print(message.channel)
@@ -198,127 +201,484 @@ async def search_cypdata(message,cyp_TOKEN):
       past = now - dt.timedelta(days=90)
       past_time = dt.datetime.strftime(past, "%Y-%m-%d %H:%M")      
 
-
-      def get_player_match():
-
-        #플레이어 '매칭 기록' 조회 url
-        print(playerid)
-        #오타는 항상 조심합시다..
-        url = "https://api.neople.co.kr/cy/players/" + playerid + "/matches?gameTypeId=normal&startDate=" + str(past_time) + "&endDate=" + str(now_time) + "&limit=100&apikey=" + cyp_TOKEN
+      #플레이어 '매칭 기록' 조회 url
+      print(playerid)
+      #오타는 항상 조심합시다..
+      url = "https://api.neople.co.kr/cy/players/" + playerid + "/matches?gameTypeId=normal&startDate=" + str(past_time) + "&endDate=" + str(now_time) + "&limit=100&apikey=" + cyp_TOKEN
 
 
-        #matchid 정보 기록
-        '''
-          "rows" : [ 
-            {
-            "date" : "datetime.datetime",
-            "matchId" : "matchId",
-            "map" : {"mapId" : 201, "name" : "아인트호벤"},
-            "playInfo" : {
-              "result" : "win or lose",
-              "random" : true or false,
-              "partyUserCount" : 파티유저수,
-              "characterId" : "한 사이퍼 고유 ID",
-              "characterName" : "사이퍼 이름",
-              "level" : 레벨, 
-              "killCount" : 킬수,
-              "deathCount" : 데스수,
-              "assistCount" : 어시스트수,
-              "attackPoint" : 공격량,
-              "damagePoint" : 피해량,
-              "battlePoint" : 전투점수,
-              "sightPoint" : 시야점수,
-              "playTime" : (숫자)/60 해야 분단위
-            }
-        }
-        '''
+      #matchid 정보 기록
+      '''
+        "rows" : [ 
+          {
+          "date" : "datetime.datetime",
+          "matchId" : "matchId",
+          "map" : {"mapId" : 201, "name" : "아인트호벤"},
+          "playInfo" : {
+            "result" : "win or lose",
+            "random" : true or false,
+            "partyUserCount" : 파티유저수,
+            "characterId" : "한 사이퍼 고유 ID",
+            "characterName" : "사이퍼 이름",
+            "level" : 레벨, 
+            "killCount" : 킬수,
+            "deathCount" : 데스수,
+            "assistCount" : 어시스트수,
+            "attackPoint" : 공격량,
+            "damagePoint" : 피해량,
+            "battlePoint" : 전투점수,
+            "sightPoint" : 시야점수,
+            "playTime" : (숫자)/60 해야 분단위
+          }
+      }
+      '''
 
-        dict3 = requests.get(url).json()
+      dict3 = requests.get(url).json()
 
-        #각 요소 리스트
+      #각 요소 리스트
 
-        #캐릭 리스트
-        cha_list = []
+      #캐릭 리스트
+      cha_list = []
 
-        try:
-          for i in range(0, 100):
-            cha_list.append(dict3['matches']['rows'][i]['playInfo']['characterName'])
-            #에러 이유 값이 제대로 불러오지 못했었음 'SEARCH_TIME_ERROR'
+      try:
+        for i in range(0, 100):
+          cha_list.append(dict3['matches']['rows'][i]['playInfo']['characterName'])
+          #에러 이유 값이 제대로 불러오지 못했었음 'SEARCH_TIME_ERROR'
 
-        except IndexError:
-          pass
+      except IndexError:
+        pass
 
-        if not cha_list:
-          ctx.send(embed=discord.Embed(title= None, 
-          description = "전적이 존재하지 않습니다."))
+      if not cha_list:
+        ctx.send(embed=discord.Embed(title= None, 
+        description = "전적이 존재하지 않습니다."))
 
-        cha_list = Counter(cha_list)
-        most_cha = cha_list.most_common(1)[0][0]
+      cha_list = Counter(cha_list)
+      #most 캐릭
+      most_cha = cha_list.most_common(1)[0][0]
 
-        #파티원 리스트
-        party_count = []
-        
-        try:
-          for i in range(0, 100):
-            count = dict3['matches']['rows'][i]['playInfo']['partyUserCount']
-            party_count.append(count)
+      #파티원 리스트
+      party_count = []
+      
+      try:
+        for i in range(0, 100):
+          count = dict3['matches']['rows'][i]['playInfo']['partyUserCount']
+          party_count.append(count)
 
-        except IndexError:
-          pass
+      except IndexError:
+        pass
 
-        most_party = Counter(party_count).most_common(1)
+      #모스트 파티원 수
+      most_party = Counter(party_count).most_common(1)
 
-        #시간대 리스트
-        time_count = []
-        
-        try:
-          for i in range(0, 100):
-            time = dict3['matches']['rows'][i]['date'][11:13]
-            #hour 시간 값만 가져옴
-            time_count.append(time)
+      #시간대 리스트
+      time_count = []
+      
+      try:
+        for i in range(0, 100):
+          time = dict3['matches']['rows'][i]['date'][11:13]
+          #hour 시간 값만 가져옴
+          time_count.append(time)
 
-        except IndexError:
-          pass
+      except IndexError:
+        pass
+  
+      #선호 시간대
+      most_time = Counter(time_count).most_common(1)
+
+      #매치id 리스트 50판 기준으로 두개로 나눔
+      matchid_list = []
+
+      try:
+        for i in range(0, 50):
+          count = dict3['matches']['rows'][i]['matchId']
+          matchid_list.append(count)
+
+      except IndexError:
+        pass
+
+      matchid_list2 = []
+
+      try:
+        for i in range(50, 100):
+          count = dict3['matches']['rows'][i]['matchId']
+          matchid_list2.append(count)
+
+      except IndexError:
+        pass
+
+  
+      #포지션 리스트
     
-        most_time = Counter(time_count).most_common(1)
+      position_count = []
+      
+      async def fetch(client, matchid):
+          async with client.get('https://api.neople.co.kr/cy/matches/'+ matchid+ '?&apikey=' + cyp_TOKEN) as resp:
+              if resp.status == 400:
+                #print(400)
+                pass
+                  
+              if resp.status == 200:
+                
+                #print(matchid)
+                #print("done")
+                pass
 
-        #매치id 리스트 50판 기준으로 두개로 나눔
-        matchid_list = []
+              return await resp.text()
 
-        try:
-          for i in range(0, 50):
-            count = dict3['matches']['rows'][i]['matchId']
-            matchid_list.append(count)
+      async def get_position(matchid):
+          async with aiohttp.ClientSession() as client:
+              temp_dict = await fetch(client, matchid)
+              temp_dict = json.loads(temp_dict)
+              try:
+                  for i in range(0, 10):
+                      if user == temp_dict['players'][i]['nickname']:
+                          count = temp_dict['players'][i]['position']['name']
+                          position_count.append(count)
+              except IndexError:
+                  pass
+      #position_count 리스트에 '근딜' , '원딜' , '서포터' , '탱커' 중 하나가 들어감
 
-        except IndexError:
-          pass
+      task1 = [await get_position(matchid) for matchid in matchid_list]
 
-        matchid_list2 = []
+      if not matchid_list2 == []:
+        
+        task2 = [await get_position(matchid) for matchid in matchid_list2]
+        
 
-        try:
-          for i in range(50, 100):
-            count = dict3['matches']['rows'][i]['matchId']
-            matchid_list2.append(count)
+      '''
+      #match_list,//2에서 match id 넣어서 포지션 카운트 함
+      async def get_count(matchid_list,matchid_list2):
+        for matchid in matchid_list:
+          print(1)
+          await get_position(matchid)
+        if not matchid_list2 == []:
+          for matchid in matchid_list2:
+            print(2)
+            await get_position(matchid)
+      
+      if __name__ == 'prac.cypers':
+        p1 = Process(target=get_count, args=(matchid_list,))
+        p2 = Process(target=get_count2, args=(matchid_list2,))
+        p1.start()
+        p2.start()
+        p1.join()
+        p1.join()
+      
+      
+      await get_count(matchid_list,matchid_list2)
+      '''
+      #print('module name:', __name__) == prac.cypers
+      #print('parent process:', os.getppid()) = 6
+      #print('process id:', os.getpid()) = 2051
 
-        except IndexError:
-          pass
+      most_position = Counter(position_count).most_common()
+      #position_count2 = 가장 많이 나온 모스트 포지션
 
-        return most_cha, most_party, most_time
-
-      def set_mostfield(most):
+      #모스트 정보 embed 셋팅
+      def set_mostfield(most):  
         #첫번째 줄
-        embed.add_field(name="모스트 캐릭: ",value = str(most[0]))
-        embed.add_field(name="주로 맺는 파티규모: ",value = str(most[1][0][0]) + "명")
-        embed.add_field(name="자주하는 시간대: ",value = str(most[2][0][0])+ ", " + str(most[2][0][1]) + "시")
+        embed.add_field(name="모스트 캐릭: "  ,value = str(most[0]))
+        if str(most[1][0][0]) == '0':
+          embed.add_field(name="선호 스타일",value = "솔로 플레이어")
+        else:  
+          embed.add_field(name="선호 스타일: ",value = str(most[1][0][0]) + "명 파티")
+        embed.add_field(name="선호 시간대: ",value = str(most[2][0][0])+ ", " + str(most[2][0][1]) + "시")
+        embed.add_field(name="선호 포지션: ",value = most[3])
       
       #90일간 전적중 100게임 가장 많이 한 캐릭터
       most = []
-      most = get_player_match()
+      most = [most_cha,most_party,most_time,most_position]
       #most[0] = 모스트 캐릭
       #most[1] = 모스트 파티원
       #most[2] = 모스트 시간대
 
       #모스트 목록 세팅
       set_mostfield(most)
-
+      #일반 정보 출력
       await ctx.send(embed=embed)
+      #ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+      #상세 검색
+      await ctx.send(embed=discord.Embed(title = None, description = "상세히 보실려면 '자세히'를 입력해주세요.", colour=0x7289da))
+
+      def check(msg):
+
+        msg1 = msg.content
+
+        return msg.channel == ctx and msg.author == info_user and msg1 == '자세히'
+      
+      try:
+        await client.wait_for('message', check = check, timeout = 10)
+        
+        await ctx.send("check")
+
+      except asyncio.TimeoutError:
+        pass
+
+      else:
+        pass
+
+## 사이퍼즈 전적 검색
+async def search_cypdata(message,cyp_TOKEN,client):
+      ctx = message.channel
+
+      print(message.channel)
+
+      info_user = message.author
+      
+      username = message.message.content[4:]
+      
+      #print(username)
+      
+      try:
+        url = "https://api.neople.co.kr/cy/players?nickname=" + username + "&wordType=match&apikey=" + cyp_TOKEN
+        
+        dict = requests.get(url).json()
+        #뒤에 () 괄호 없어서 오류 뜸 ㅋ 왜그런지는 잘 모르겠네
+        playerid = dict['rows'][0]['playerId']
+        user = dict['rows'][0]['nickname']
+        grade = dict['rows'][0]['grade']
+
+
+      except IndexError:
+        await message.delete(delay=0)
+        msg = await ctx.send(embed=discord.Embed(title="닉네임이 존재하지 않습니다."))
+        await msg.delete(delay=3)
+
+      except requests.exceptions.RequestException:
+        await message.delete(delay=0)
+        await ctx.send(embed=discord.Embed(title="서버가 응답하지 않습니다."))
+        await msg.delete(delay=3)
+
+      '''
+      user = nickname
+      grade = 급수
+      clanName = 클랜이름
+      ratingpoint = 공식전 점수?
+      maxRatingPoing = 최대 점수
+      tierName = 공식 티어
+      records 
+      [
+        gameTypeId = rating <- rating 으로 값일경우 공식전 데이터 라는 뜻
+        winCount = 이긴횟수
+        loseCount" : 진횟수,
+        stopCount" : 나간횟수
+      ]
+       "gameTypeId" : "normal",
+        "winCount" : 2097,
+        "loseCount" : 1768,
+        "stopCount" : 67
+      '''
+
+      #print(user)
+      #print(playerid)
+
+      #기본 embed 양식
+      embed=discord.Embed(
+        title = None,
+        colour = 0x3498db
+      )
+
+      #기본 정보 셋팅
+      def player_info():
+        embed.add_field(name= "이름: ", value = user)
+        embed.add_field(name= "급수: ", value = grade)
+        embed.add_field(name= "\n\u200b" , value = "승패 기록"  ,inline=False)
+      
+      #'\u200b' -> 빈공간
+      #"\n\u200b"
+
+      player_info()
+    
+      try:
+        url = "https://api.neople.co.kr/cy/players/" + playerid + "?apikey=" + cyp_TOKEN
+        #플레이어의 정보 조회 api 주소
+        dict2 = requests.get(url).json()
+        #dict 형태로 정리된 정보
+        #1. 공식과 일반 둘다 존재하는 경우
+        #2. 일반만 존재 하는 경우(공식 조건 안되는 경우가 이에 해당함)
+        #3. 둘다 존재 안하는 경우(협력만 돌렸거나, 랭크가 1인경우가 이에 해당함)
+        
+        #공식 매치 결과 기본값
+        rw_count, rl_count, rs_count = 0,0,0
+        #일반 매치 결과 기본값
+        w_count, l_count, s_count = 0,0,0
+        #w_count,l_count,s_count = 0 -> non-iterable int object error
+
+        #사이퍼즈 아이콘
+        embed.set_author(
+          name = "사이퍼즈 전적 검색",
+          url= "http://cyphers.nexon.com/cyphers/main",icon_url="https://cdn.discordapp.com/attachments/646154916288790541/668263428065984513/cypers_icon.jpg"
+          )
+
+        #승패 기록 필드 세팅
+        def set_infofield():
+          #첫번째 줄
+          embed.add_field(name="공식 승: ",value = rw_count)
+          embed.add_field(name="공식 패: ",value = rl_count)
+          embed.add_field(name="공식 탈주: ",value = rs_count)
+          #두번째 줄
+          embed.add_field(name="일반 승: ",value = w_count)
+          embed.add_field(name="일반 패: ",value = l_count)
+          embed.add_field(name="일반 탈주: ",value = s_count)
+
+        #3번 조건 일시
+        if dict2['records'] == []:
+          embed.add_field(name="에러: ",value="일반,공식 기록이 없는 플레이어 입니다.")
+
+        #2번 조건 일시
+        elif dict2['records'][0]['gameTypeId'] == 'normal':
+          w_count = dict2['records'][0]['winCount']
+          l_count = dict2['records'][0]['loseCount']
+          s_count = dict2['records'][0]['stopCount']
+          set_infofield()
+        
+        #1번 조건 일시
+        else:
+          #공식 기록
+          rw_count = dict2['records'][0]['winCount']
+          rl_count = dict2['records'][0]['loseCount']
+          rs_count = dict2['records'][0]['stopCount']
+          #일반 기록
+          w_count = dict2['records'][1]['winCount']
+          l_count = dict2['records'][1]['loseCount']
+          s_count = dict2['records'][1]['stopCount']
+          set_infofield()
+
+      #예외처리 및 예외시 에러코드
+      except Exception as ex:
+        embed.add_field(name="에러: ", value= ex)
+        embed.add_field(name="문의: ", value= "코드와 함께 dm으로 보내주세요")
+
+      #매칭 기록 조회
+
+      #시간 설정
+      now = dt.datetime.now(timezone('Asia/Seoul'))
+      now_time = dt.datetime.strftime(now, "%Y-%m-%d %H:%M")
+      past = now - dt.timedelta(days=90)
+      past_time = dt.datetime.strftime(past, "%Y-%m-%d %H:%M")      
+
+      #플레이어 '매칭 기록' 조회 url
+      print(playerid)
+      #오타는 항상 조심합시다..
+      url = "https://api.neople.co.kr/cy/players/" + playerid + "/matches?gameTypeId=normal&startDate=" + str(past_time) + "&endDate=" + str(now_time) + "&limit=100&apikey=" + cyp_TOKEN
+
+
+      #matchid 정보 기록
+      '''
+        "rows" : [ 
+          {
+          "date" : "datetime.datetime",
+          "matchId" : "matchId",
+          "map" : {"mapId" : 201, "name" : "아인트호벤"},
+          "playInfo" : {
+            "result" : "win or lose",
+            "random" : true or false,
+            "partyUserCount" : 파티유저수,
+            "characterId" : "한 사이퍼 고유 ID",
+            "characterName" : "사이퍼 이름",
+            "level" : 레벨, 
+            "killCount" : 킬수,
+            "deathCount" : 데스수,
+            "assistCount" : 어시스트수,
+            "attackPoint" : 공격량,
+            "damagePoint" : 피해량,
+            "battlePoint" : 전투점수,
+            "sightPoint" : 시야점수,
+            "playTime" : (숫자)/60 해야 분단위
+          }
+      }
+      '''
+
+      dict3 = requests.get(url).json()
+
+      #각 요소 리스트
+
+      #캐릭 리스트
+      cha_list = []
+
+      try:
+        for i in range(0, 100):
+          cha_list.append(dict3['matches']['rows'][i]['playInfo']['characterName'])
+          #에러 이유 값이 제대로 불러오지 못했었음 'SEARCH_TIME_ERROR'
+
+      except IndexError:
+        pass
+
+      if not cha_list:
+        ctx.send(embed=discord.Embed(title= None, 
+        description = "전적이 존재하지 않습니다."))
+
+      cha_list = Counter(cha_list)
+      #most 캐릭
+      most_cha = cha_list.most_common(1)[0][0]
+
+      #파티원 리스트
+      party_count = []
+      
+      try:
+        for i in range(0, 100):
+          count = dict3['matches']['rows'][i]['playInfo']['partyUserCount']
+          party_count.append(count)
+
+      except IndexError:
+        pass
+
+      #모스트 파티원 수
+      most_party = Counter(party_count).most_common(1)
+
+      #시간대 리스트
+      time_count = []
+      
+      try:
+        for i in range(0, 100):
+          time = dict3['matches']['rows'][i]['date'][11:13]
+          #hour 시간 값만 가져옴
+          time_count.append(time)
+
+      except IndexError:
+        pass
+  
+      #선호 시간대
+      most_time = Counter(time_count).most_common(1)
+
+      #매치id 리스트 50판 기준으로 두개로 나눔
+      matchid_list = []
+
+      try:
+        for i in range(0, 50):
+          count = dict3['matches']['rows'][i]['matchId']
+          matchid_list.append(count)
+
+      except IndexError:
+        pass
+
+      matchid_list2 = []
+
+      try:
+        for i in range(50, 100):
+          count = dict3['matches']['rows'][i]['matchId']
+          matchid_list2.append(count)
+
+      except IndexError:
+        pass
+        
+
+      #모스트 정보 embed 셋팅
+      def set_mostfield(most):  
+        #첫번째 줄
+        embed.add_field(name="모스트 캐릭: "  ,value = str(most[0]))
+        if str(most[1][0][0]) == '0':
+          embed.add_field(name="선호 스타일",value = "솔로 플레이어")
+        else:  
+          embed.add_field(name="선호 스타일: ",value = str(most[1][0][0]) + "명 파티")
+        embed.add_field(name="선호 시간대: ",value = str(most[2][0][0])+ ", " + str(most[2][0][1]) + "시")
+      
+      #90일간 전적중 100게임 가장 많이 한 캐릭터
+      most = []
+      most = [most_cha,most_party,most_time]
+      #most[0] = 모스트 캐릭
+      #most[1] = 모스트 파티원
+      #most[2] = 모스트 시간대
+
+      #모스트 목록 세팅
+      set_mostfield(most)
