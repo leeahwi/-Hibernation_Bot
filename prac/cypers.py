@@ -29,7 +29,9 @@ async def divide_team(message):#사퍼 사다리 기능
     else:
       members_list.remove(member)
       members_list.append(member.display_name)
-
+      
+  print(members_list)
+ 
   team_list = [[],[]]
   members_count = len(members_list)
 
