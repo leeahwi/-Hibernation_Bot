@@ -26,7 +26,7 @@ async def divide_team(message):#사퍼 사다리 기능
   
   count = 0
   
-  for i in members_list:
+  for i in members:
     if members[count].bot == False:
       members_list.append(members[count].display_name)
     else:
