@@ -27,13 +27,16 @@ async def divide_team(message):#사퍼 사다리 기능
     if member.bot == True:
       members_list.remove(member)
     else:
-      members_list[i] = member.display_name
+      members_list.remove(member)
+      members_list.append(member.display_name)
 
   team_list = [[],[]]
   members_count = len(members_list)
 
+  count = 0
+  
   for i in range(0,members_count): #team_list[0] == 1팀, team_list[1] == 2팀
-    count = 0
+  
     choiced_member = random.choice(members_list)
     team_list[count].append(choiced_member)
     members_list.remove(choiced_member)
