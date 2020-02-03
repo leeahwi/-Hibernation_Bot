@@ -17,42 +17,48 @@ from collections import Counter
  
  
 ##사퍼 사다리 기능
-async def divide_team(message):#사퍼 사다리 기능
-  voice = message.author.voice.channel
-  ctx = message.channel
+async def divide_team(message):
 
-  members_list = voice.members[:]
+    voice = message.author.voice.channel
+    ctx = message.channel
 
-  for i,member in enumerate(members_list):
-    if member.bot == True:
-      members_list.remove(member)
-    else:
-      members_list.remove(member)
-      members_list.append(member.display_name)
-      
-  print(members_list)
- 
-  team_list = [[],[]]
-  members_count = len(members_list)
+    mlist = voice.members[:]
 
-  count = 0
-  
-  for i in range(0,members_count): #team_list[0] == 1팀, team_list[1] == 2팀
-  
-    choiced_member = random.choice(members_list)
-    team_list[count].append(choiced_member)
-    members_list.remove(choiced_member)
-    if count == 0:
-      count = 1
-    else:
-      count = 0 
-      
-  print(team_list[0])
-  print(team_list[1])
-  
-  await ctx.send(embed=discord.Embed(title= "1팀: " + " ,".join(str(member) for member in team_list[0]),colour=0xe74c3c))
+    counter = 0
+    #10명 채우기 위한 변수
 
-  await ctx.send(embed=discord.Embed(title= "2팀: " + " ,".join(str(member) for member in team_list[1]),colour=0x3498db))
+    mlist_name=[]
+
+    for i in range(0,10):
+      mlist_name.append("None")
+
+    #print(mlist)
+    #voicechannel에 들어가 있는 사람의 이름만 mlist_name 리스트에 복사
+    for i in mlist:
+
+      if counter == 10:
+        break
+
+      if mlist[counter].bot == False:
+          mlist_name.remove("None")
+          mlist_name.append(mlist[counter].display_name)
+
+      counter +=1
+
+    #print(mlist_name)
+    random.shuffle(mlist_name)
+    while abs(mlist_name[0:5].count("None")-mlist_name[5:10].count("None")) >= 2:
+      random.shuffle(mlist_name)
+
+    #랜덤으로 팀 배정
+    #print(mlist_name)
+
+    #print(mlist_name[0:5])
+    #print(mlist_name[5:10])
+
+    await ctx.send(embed=discord.Embed(title= "1팀: " + ', '.join((str(i) for i in mlist_name[0:5])),colour=0xe74c3c))
+
+    await ctx.send(embed=discord.Embed(title= "2팀: " + ', '.join((str(i) for i in mlist_name[5:10])),colour=0x3498db))
 
 ## 사이퍼즈 전적 검색
 async def search_cypdata(message,cyp_TOKEN,client):
