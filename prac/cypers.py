@@ -45,9 +45,9 @@ async def divide_team(message):#사퍼 사다리 기능
   print(team_list[0])
   print(team_list[1])
   
-  await ctx.send(embed=discord.Embed(title= "1팀: " + " ,".join(member for member in team_list[0]),colour=0xe74c3c))
+  await ctx.send(embed=discord.Embed(title= "1팀: " + " ,".join(str(member) for member in team_list[0]),colour=0xe74c3c))
 
-  await ctx.send(embed=discord.Embed(title= "2팀: " + " ,".join(member for member in team_list[1]),colour=0x3498db))
+  await ctx.send(embed=discord.Embed(title= "2팀: " + " ,".join(str(member) for member in team_list[1]),colour=0x3498db))
 
 ## 사이퍼즈 전적 검색
 async def search_cypdata(message,cyp_TOKEN,client):
