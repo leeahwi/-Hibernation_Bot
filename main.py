@@ -37,59 +37,39 @@ async def on_ready():
     await client.change_presence(activity=botActivity)
   #check it work
 
-###봇 기본 기능 
-
-#클래스 변수설정
-bot = bot(client)
 
 @client.command()
 async def test(message):
-  
-  #기본 변수
-  info_user = message.author
-
-  ctx = message.channel
-
   await ctx.send("testing")
 
+###봇 기본 기능 
+bot = bot(client)
 #메세지 단일 또는 다중 삭제
 @client.command()
-async def delete(message):
-  await bot.del_messages(message)
-
+async def 삭제(message):
+  await bot.delete_user_messages(message)
+#봇 스탯 바꾸기
 @client.command()
-async def status(message):
+async def 상태(message):
   await bot.set_status(message)
-
-###fun 기능
-
-#클래스 변수설정
-us_chat = userchat(client)
-
+#팀배정 하기
 @client.command()
-async def 꼬리(message):
-  await us_chat.tale(message)
+async def 팀배정(message):
+  await bot.divide_team(message)
 
+###이미지 업로드 관련 기능
 @client.command()
-async def 하영(message):
-  await us_chat.hayong(message)
-
+async def 이미지(message):
+  image = get_images(client,message)
+  search_message = message.message.content[5:]
+  await image.get_custom_image(search_message)
 
 
 ###사이퍼즈 관련 기능
 
 @client.command()
-async def 팀배정(message):
-  await divide_team(message)
-
-@client.command()
 async def 전적(message):
   await search_cypdata(message,cyp_TOKEN,client)
-
-@client.command()
-async def 테스트전적(message):
-  await test_search_cypdata(message,cyp_TOKEN,client)
-
 
 client.run(TOKEN)
 
