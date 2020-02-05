@@ -65,7 +65,7 @@ class bot:
 
   async def set_status(self,msg):  #봇 상태 바꾸기
     ctx = msg.channel
-    msg = msg.message.content[8:]
+    msg = msg.message.content[4:]
 
     await self.client.change_presence(activity=discord.Game(name=msg))
     s_msg = await ctx.send(embed = discord.Embed(title = None, description = "상태 바꿨어요!", colour=0x7289da))
