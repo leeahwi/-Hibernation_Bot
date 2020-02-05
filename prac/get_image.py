@@ -1,46 +1,41 @@
-#이미지 가져오기 함수
+import discord
+import asyncio
+import aiohttp
+import io
 
-'''
-  if message.content.startswith(COMMANDPREFIX+'울지참'):
-    if message.content[3:] == '':
-      async with aiohttp.ClientSession() as session:
-        async with session.get('https://cdn.discordapp.com/attachments/646877332187119616/665544158773248021/IMG_20200111_093841.jpg') as resp:
-          if resp.status != 200:
-            return await ctx.send('Could not download file...')
-        data = io.BytesIO(await resp.read())
-        await ctx.send(file=discord.File(data, 'crying_hell.jpg'))    
+
+class get_images:
+
+  def __init__(self,client,message):#기본 정보 세팅
+    self.client = client
+    self.ctx = message.channel
+    self.user = message.author
+    self.message = message
+
+  custom_images_dict = {
+    "울지참":"https://cdn.discordapp.com/attachments/646877332187119616/665544158773248021/IMG_20200111_093841.jpg",
+    "오르카":"https://cdn.discordapp.com/attachments/646154916288790541/674192386703753216/95ce8ba75d0986dd.jpg",
+    "제이":"https://cdn.discordapp.com/attachments/646154916288790541/674201337210077194/j.jpg",
+    "냥이":"https://cdn.ppomppu.co.kr/zboard/data3/2019/0910/m_20190910001740_upyzieih.jpeg",
+    }
+
+  async def get_custom_image(self,message):
     
-  if message.content.startswith(COMMANDPREFIX+'냥냥'):
-    if message.content[3:] == '':
-      async with aiohttp.ClientSession() as session:
-        async with session.get('https://source.unsplash.com/1600x900/?cat') as resp:
-          if resp.status != 200:
-            return await ctx.send('Could not download file...')
-        data = io.BytesIO(await resp.read())
-        await ctx.send(file=discord.File(data, 'cute_cat.jpg'))
+    for key, value in self.custom_images_dict.items():
+      if key == message:
 
-  if message.content.startswith(COMMANDPREFIX+'멍멍'):
-    if message.content[3:] == '':
-      async with aiohttp.ClientSession() as session:
-        async with session.get('https://source.unsplash.com/1600x900/?dog') as resp:
-          if resp.status != 200:
-            return await ctx.send('Could not download file...')
-        data = io.BytesIO(await resp.read())
-        await ctx.send(file=discord.File(data, 'cute_dog.jpg'))
+        file_url = value
 
-  if message.content.startswith(COMMANDPREFIX+'검색'):
-    if message.content[3:] == '':
-    #if message.author.id == 260754328187305984:
-      keyword = message.content[4:]
-        #checking
-      print(keyword)
+        async with aiohttp.ClientSession() as session:
+          async with session.get(file_url) as resp:
 
-      async with aiohttp.ClientSession() as session:
-        async with session.get('https://source.unsplash.com/1600x900/?'+keyword) as resp:
-          if resp.status != 200:
-            return await ctx.send('Could not download file...')
-        data = io.BytesIO(await resp.read())
-        await ctx.send(file=discord.File(data, 'search_keyword.jpg'))
+            if resp.status != 200:
+              return await self.ctx.send('Could not download file...')
 
-      print(resp)
-'''
+            data = io.BytesIO(await resp.read())
+
+        await self.ctx.send(file=discord.File(data, 'image.jpg'))
+
+      else:
+        pass
+
