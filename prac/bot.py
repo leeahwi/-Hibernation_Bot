@@ -15,7 +15,7 @@ class bot:
     ctx = message.channel
     che = False
     
-    number = message.message.content[8:]
+    number = message.message.content[4:]
   
     async def delete_message(num,info_user): #num 갯수의 메세지 삭제 다 삭제 후 True return
 
