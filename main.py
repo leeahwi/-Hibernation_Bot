@@ -62,7 +62,10 @@ async def 팀배정(message):
 async def 이미지(message):
   image = get_images(client,message)
   search_message = message.message.content[5:]
-  await image.get_custom_image(search_message)
+  task = await image.send_custom_image(search_message)
+  if task != True:
+    await image.send_random_image(search_message)
+
 
 
 ###사이퍼즈 관련 기능
