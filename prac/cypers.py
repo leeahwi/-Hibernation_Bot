@@ -14,44 +14,6 @@ import datetime as dt
  
 from pytz import timezone
 from collections import Counter
- 
- 
-async def divide_team(message):#사퍼 사다리 기능
-  voice = message.author.voice.channel
-  ctx = message.channel
-
-  members = voice.members[:]
- 
-  members_list = []
-  
-  count = 0
-  
-  for i in members:
-    if members[count].bot == False:
-      members_list.append(members[count].display_name)
-    else:
-      pass
-     
-    count += 1
-
-  team_list = [[],[]]
-
-  members_count = len(members_list)
-
-  count = 0
-
-  for i in range(0,members_count): #team_list[0] == 1팀, team_list[1] == 2팀
-    choiced_member = random.choice(members_list)
-    team_list[count].append(choiced_member)
-    members_list.remove(choiced_member)
-    if count == 0:
-      count = 1
-    else:
-      count = 0
-
-  await ctx.send(embed=discord.Embed(title= "1팀: " + ' ,'.join(member for member in team_list[0]),colour=0xe74c3c))
-
-  await ctx.send(embed=discord.Embed(title= "2팀: " + ' ,'.join(member for member in team_list[1]),colour=0x3498db))
 
 ## 사이퍼즈 전적 검색
 async def search_cypdata(message,cyp_TOKEN,client):
