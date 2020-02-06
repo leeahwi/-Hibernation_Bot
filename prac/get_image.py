@@ -21,17 +21,19 @@ class get_images:
     }
 
   async def send_custom_image(self,message): #따로 지정한 이미지 보내기
-    
+
+    result = False
+
     for key, value in self.custom_images_dict.items():
       if key == message:
 
         file_url = value
-
         await self.get_image_jpg(file_url)
+        result = True
+        break
 
-      else:
-        return False
-
+    return result
+  
   async def send_random_image(self,message):
 
     if message == "냥이.gif":
