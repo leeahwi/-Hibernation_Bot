@@ -2,8 +2,6 @@ import discord
 import asyncio
 import random
 import aiohttp
-import pycares
-from multiprocessing import Process
 from discord.ext import commands
 
 
