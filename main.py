@@ -111,8 +111,5 @@ client.run(TOKEN)
 #'\u200b' -> 빈공간
 #"\n\u200b"
 
-client.run(TOKEN)
-
-
 
 
