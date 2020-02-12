@@ -387,8 +387,5 @@ class cypers_searcher:
 
     await self.ctx.send(f"```최근 50판 중 TOP 7\n{send_message}```")
 
-    embed = discord.Embed(title = None, colour = 0x3498db, )
-
-    print(dir(embed))
 
     await self.ctx.send(embed=embed)
