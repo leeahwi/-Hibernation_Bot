@@ -75,10 +75,37 @@ async def 이미지(message):
 
 ###사이퍼즈 관련 기능
 
+###사이퍼즈 관련 기능
 @client.command()
 async def 전적(message):
-  await search_cypdata(message,cyp_TOKEN,client)
 
+  search_message = message
+
+  user = message.author
+
+  cyp = cypers_searcher(client,cyp_TOKEN,message)
+
+  list = ["기본 전적","최근 50판중 TOP 7 모스트 캐릭","모스트 캐릭 상세 전적","미정"]
+
+  embed = discord.Embed(title = "사이퍼즈 전적 검색기",description = "번호를 입력해주세요.", colour = 0x3498db)
+  embed.add_field(name = "\000" ,value = "1. {}\n2. {}\n3. {}\n4. {}\n".format(*list), inline = False)
+
+  await message.channel.send(embed=embed)
+
+  def check(message):
+    return not message.author.bot
+
+  msg = await client.wait_for('message', check=check)
+
+  if msg.content == '1':
+    await cyp.send_basic_record(search_message)
+  elif msg.content == '2':
+    await cyp.send_top_chars(search_message)
+
+client.run(TOKEN)
+
+#'\u200b' -> 빈공간
+#"\n\u200b"
 
 client.run(TOKEN)
 
