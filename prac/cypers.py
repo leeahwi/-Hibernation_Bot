@@ -387,5 +387,3 @@ class cypers_searcher:
 
     await self.ctx.send(f"```최근 50판 중 TOP 7\n{send_message}```")
 
-
-    await self.ctx.send(embed=embed)
