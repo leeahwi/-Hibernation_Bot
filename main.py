@@ -46,6 +46,11 @@ async def 겨울아(message):
 @client.command()
 async def 뭐해(message):
   await message.channel.send("그냥... 그러게.. 뭐하는 중일까..")
+@client.command()
+async def 꼬리(message):
+  await message.channel.send("바보")
+  await message.channel.send("멍청이")
+  await message.channel.send("(대충 꼬리)")
 
 ###봇 기본 기능 
 bot = bot(client)
@@ -73,7 +78,6 @@ async def 이미지(message):
   if result != True:
     await image.send_random_image(search_message)
 
-###사이퍼즈 관련 기능
 
 ###사이퍼즈 관련 기능
 @client.command()
