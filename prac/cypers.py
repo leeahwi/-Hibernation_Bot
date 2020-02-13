@@ -173,8 +173,10 @@ class cypers_searcher:
     try:
       for i in range(0, limit):
         count = dict['matches']['rows'][i]['playInfo']['characterName']
-        character_name_list.append(count)
-   
+        if count == "":
+          pass
+        else:
+          character_name_list.append(count)
       return character_name_list
         
     except IndexError:#아무것도 없을 경우 
@@ -375,7 +377,10 @@ class cypers_searcher:
 
     character_name_list = self.get_character(dict,50)
 
-    most_charlist = Counter(character_name_list).most_common(7)
+    if len(character_name_list) < 7:
+      most_charlist = Counter(character_name_list).most_common(len(character_name_list))
+    else:
+      most_charlist = Counter(character_name_list).most_common(7)
 
     send_list = []
     for i, char in enumerate(most_charlist,start=1):
