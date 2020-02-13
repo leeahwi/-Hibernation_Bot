@@ -376,11 +376,8 @@ class cypers_searcher:
     dict = await self.get_match(player_info_data['playerid'])
 
     character_name_list = self.get_character(dict,50)
-
-    if len(character_name_list) < 7:
-      most_charlist = Counter(character_name_list).most_common(len(character_name_list))
-    else:
-      most_charlist = Counter(character_name_list).most_common(7)
+  
+    most_charlist = Counter(character_name_list).most_common(7)
 
     send_list = []
     for i, char in enumerate(most_charlist,start=1):
