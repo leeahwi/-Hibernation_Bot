@@ -385,4 +385,4 @@ class cypers_searcher:
     for list in send_list:
       send_message += list + '\n' 
 
-    await self.ctx.send(f"```{search_message}의 최근 50판 중 TOP 7\n{send_message}```")
+    await self.ctx.send(f"```{player_info_data['nickname']}의 최근 50판 중 TOP 7\n{send_message}```")
