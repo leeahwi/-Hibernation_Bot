@@ -173,17 +173,16 @@ class cypers_searcher:
     try:
       for i in range(0, limit):
         count = dict['matches']['rows'][i]['playInfo']['characterName']
-        if count == "":
-          pass
-        else:
-          character_name_list.append(count)
-      return character_name_list
-        
-    except IndexError:#아무것도 없을 경우 
-      pass
+        #전적이 리미트에 다 다 채워지지 않을 경우
+        character_name_list.append(count)
 
-    if not character_name_list:
-      return False
+    #50판이 다 채워지지 않은 상황이면 for문 중간에 IndexError가 떠서 return 값이 제대로 return이 되지 않음
+    except IndexError:#아무것도 없을 경우 
+      print('get_character: IndexError')
+      pass
+      
+    return character_name_list
+
 
   def get_party_list(self,dict): #각 매치 판의 파티원 수 가져오기
     party_count_list = []
@@ -192,31 +191,28 @@ class cypers_searcher:
       for i in range(0, self.limit):
         count = dict['matches']['rows'][i]['playInfo']['partyUserCount']
         party_count_list.append(count)
-      
-      return party_count_list
 
-    except IndexError:
+    except IndexError:#아무것도 없을 경우 
+      print('get_party_list: IndexError')
       pass
 
-    if not party_count_list:
-      return False #이 경우 솔로 플레이어로 나타나게 한다
-    
+    return party_count_list
+
   def get_start_playtime(self,dict): #각 매치의 시작한 시간 가져오기
     time_count = []
     
     try:
       for i in range(0, self.limit):
         time = dict['matches']['rows'][i]['date'][11:13]
-        print(time) # 체크 해봐야함
         time_count.append(time)
-      return time_count
-
-    except IndexError:
+    
+    except IndexError:#아무것도 없을 경우 
+      print('get_start_playtime: IndexError')
       pass
 
-    if not time_count:
-      return False
-    
+    return time_count
+
+
   def get_matchid(self,dict): #각 매치의 고유 ID 가져오기
     matchid_list = [] 
 
@@ -224,14 +220,13 @@ class cypers_searcher:
       for i in range(0, int(self.limit)):
         matchid = dict['matches']['rows'][i]['matchId']
         matchid_list.append(matchid)
-      return matchid_list
 
-    except IndexError:
-      pass  
-    
-    if not matchid_list:
-      return False
+    except IndexError:#아무것도 없을 경우 
+      print('get_matchid: IndexError')
+      pass
 
+    return matchid_list
+  
   def get_match_result(self,dict): #각 매치 결과 가져오기
 
     result_list = []
@@ -240,11 +235,12 @@ class cypers_searcher:
       for i in range(0,self.limit):
         result = dict['matches']['rows'][i]['playInfo']['result']
         result_list.append(result)
-      return result_list
 
-    except IndexError:
-      return False
-    
+    except IndexError:#아무것도 없을 경우 
+      print('get_match_result: IndexError')
+      pass
+
+    return result_list
   def get_match_kda(self,dict): #각 매치 kda, 피해량 등 가져오기
     kill_count_list = []
     death_count_list = []
@@ -376,16 +372,17 @@ class cypers_searcher:
     dict = await self.get_match(player_info_data['playerid'])
 
     character_name_list = self.get_character(dict,50)
-  
+
     most_charlist = Counter(character_name_list).most_common(7)
 
     send_list = []
+
     for i, char in enumerate(most_charlist,start=1):
       send_list.append("{}. {} : {}판".format(i,char[0],char[1]))
+
     send_message = ""
 
     for list in send_list:
       send_message += list + '\n' 
 
-    await self.ctx.send(f"```최근 50판 중 TOP 7\n{send_message}```")
-
+    await self.ctx.send(f"```{search_message}의 최근 50판 중 TOP 7\n{send_message}```")
