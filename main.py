@@ -95,7 +95,8 @@ async def 전적(message):
     await cyp.send_prefer_info(search_message)
     
   await msg.delete(delay = 0)
-
+  await message.delete(delay = 0)
+    
 client.run(TOKEN)
 
 #'\u200b' -> 빈공간
