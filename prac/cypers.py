@@ -342,7 +342,7 @@ class cypers_searcher:
         position_dict.append(response)
       
       print("delayed 1.0 second")
-      await asyncio.sleep(delay = 1.0, result = "delayed")
+      await asyncio.sleep(delay = 0.6, result = "delayed")
 
     #for key, value in position_dict.items():
      # print('{} : {}'.format(key,value))
