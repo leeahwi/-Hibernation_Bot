@@ -90,7 +90,7 @@ async def 전적(message):
 
   cyp = cypers_searcher(client,cyp_TOKEN,message)
 
-  list = ["기본 전적","최근 50판중 TOP 7 모스트 캐릭","미구현","미구현"]
+  list = ["기본 전적","최근 50판중 TOP 7 모스트 캐릭","유저 플레이 선호도","미구현"]
 
   embed = discord.Embed(title = "사이퍼즈 전적 검색기",description = "번호를 입력해주세요.", colour = 0x3498db)
   embed.add_field(name = "\000" ,value = "1. {}\n2. {}\n3. {}\n4. {}\n".format(*list), inline = True)
