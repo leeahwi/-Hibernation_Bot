@@ -303,7 +303,8 @@ class cypers_searcher:
             raise IndexError
               
           if resp.status == 200:
-            print("done")
+            pass
+            #print('done')
 
           temp_dict = await resp.text()
 
@@ -325,16 +326,26 @@ class cypers_searcher:
 
     return await asyncio.gather(*coroutines)
 
+
+  async def sync_get_position(self,matchid_list):#포지션 함수 비동기 처리
+    
+    coroutines = (self.get_position_info(matchid) for matchid in matchid_list)
+
+    return await asyncio.gather(*coroutines)
+
   async def fetch_position_info(self,matchid_list):#포지션 리스트로 내보내기
 
-    position_dict = {}
+    position_dict = []
 
-    for i,response in enumerate(await self.sync_get_position(matchid_list)):
-    
-      position_dict[i] = response
+    for i in range(0,int(len(matchid_list) / 25) + 1):
+      for i,response in enumerate(await self.sync_get_position(matchid_list[25*i : 25*(i+1)])): # 1초에 50개 이상 요청시 error 뜨기 때문에 25개로 나눠서 텀을 둠
+        position_dict.append(response)
+      
+      print("delayed 1.0 second")
+      await asyncio.sleep(delay = 1.0, result = "delayed")
 
-    for key, value in position_dict.items():
-      print('{} : {}'.format(key,value))
+    #for key, value in position_dict.items():
+     # print('{} : {}'.format(key,value))
 
     return position_dict
 
@@ -386,3 +397,38 @@ class cypers_searcher:
       send_message += list + '\n' 
 
     await self.ctx.send(f"```{player_info_data['nickname']}의 최근 50판 중 TOP 7\n{send_message}```")
+                        
+  async def send_prefer_info(self,search_message):#유저 선호 정보들 출력 (포지션, 시간대, 파티원, 최근 승률)
+     player_info_data = await self.get_info(search_message)
+
+     dict = await self.get_match(player_info_data['playerid'])
+
+     matchid_list = self.get_matchid(dict) #매치 id 리스트
+     party_count_list = self.get_party_list(dict) #선호 파티 구성
+     match_result_list = self.get_match_result(dict) #최근 승률 계산
+     playtime_count_list = self.get_start_playtime(dict) #선호 시작 시간대
+     position_list = await self.fetch_position_info(matchid_list)#포지션 리스트
+     most_time = self.count_most_common(playtime_count_list)#시작 시간 리스트
+
+     user_nickname = player_info_data['nickname'] + '\n'
+
+     time_count = most_time[0][0] + '시'
+
+     position_list = Counter(position_list).most_common(4)
+
+     win_persent = str(round((Counter(match_result_list).get('win')/ Counter(match_result_list).get('lose')) * 100,2)) + '%'
+
+     party_count = str(Counter(party_count_list).most_common(1)[0][0]) + '명'
+
+     list = [user_nickname,time_count,win_persent,party_count]
+     text_list = ['유저이름: ','선호 플레이 시간대: ','최근 승률: ','선호 파티구성: ']
+
+     send_message = ''
+     for k,i in zip(text_list,list):
+       send_message += k + i + "\n"
+     send_message += '\n최근 플레이한 포지션\n'
+     for i,k in enumerate(position_list):
+      send_message += position_list[i][0] + ': ' + str(position_list[i][1]) + '판' + '\n'
+
+     await self.ctx.send(f"```{send_message}```")
+      
