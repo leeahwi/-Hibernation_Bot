@@ -52,6 +52,7 @@ async def 꼬리(message):
   await message.channel.send("멍청이")
   await message.channel.send("(대충 꼬리)")
 
+
 ###봇 기본 기능 
 bot = bot(client)
 #메세지 단일 또는 다중 삭제
@@ -105,6 +106,8 @@ async def 전적(message):
     await cyp.send_basic_record(search_message)
   elif msg.content == '2':
     await cyp.send_top_chars(search_message)
+  elif msg.content == '3':
+    await cyp.send_prefer_info(search_message)
 
 client.run(TOKEN)
 
