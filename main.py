@@ -93,6 +93,8 @@ async def 전적(message):
     await cyp.send_top_chars(search_message)
   elif msg.content == '3':
     await cyp.send_prefer_info(search_message)
+    
+  await msg.delete(delay = 0)
 
 client.run(TOKEN)
 
