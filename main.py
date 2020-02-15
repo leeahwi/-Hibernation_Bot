@@ -37,21 +37,6 @@ async def on_ready():
     await client.change_presence(activity=botActivity)
   #check it work
 
-@client.command()
-async def 왜저럴까(message):
-  await message.channel.send("그러게 나도 의문이네...")
-@client.command()
-async def 겨울아(message):
-  await message.channel.send("나 불렀어?")
-@client.command()
-async def 뭐해(message):
-  await message.channel.send("그냥... 그러게.. 뭐하는 중일까..")
-@client.command()
-async def 꼬리(message):
-  await message.channel.send("바보")
-  await message.channel.send("멍청이")
-  await message.channel.send("(대충 꼬리)")
-
 
 ###봇 기본 기능 
 bot = bot(client)
