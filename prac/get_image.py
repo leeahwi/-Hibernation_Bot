@@ -17,7 +17,6 @@ class get_images:
     "울지참":"https://cdn.discordapp.com/attachments/646877332187119616/665544158773248021/IMG_20200111_093841.jpg",
     "오르카":"https://cdn.discordapp.com/attachments/646154916288790541/674192386703753216/95ce8ba75d0986dd.jpg",
     "제이":"https://cdn.discordapp.com/attachments/646154916288790541/674201337210077194/j.jpg",
-    "갑수냥이들":"https://cdn.ppomppu.co.kr/zboard/data3/2019/0910/m_20190910001740_upyzieih.jpeg",
     }
 
   async def send_custom_image(self,message): #따로 지정한 이미지 보내기
