@@ -112,9 +112,9 @@ class cypers_searcher:
 
     #일반전
     elif dict['records'][0]['gameTypeId'] == 'normal':
-      normal_wincount = dict['records'][1]['winCount']
-      normal_losecount = dict['records'][1]['loseCount']
-      normal_stopcount = dict['records'][1]['stopCount']
+      normal_wincount = dict['records'][0]['winCount']
+      normal_losecount = dict['records'][0]['loseCount']
+      normal_stopcount = dict['records'][0]['stopCount']
 
     #공식전
     else:
